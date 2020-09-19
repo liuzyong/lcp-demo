@@ -1,0 +1,18 @@
+define('node_modules/lodash/_getHolder', function(require, exports, module) {
+
+  /**
+   * Gets the argument placeholder value for `func`.
+   *
+   * @private
+   * @param {Function} func The function to inspect.
+   * @returns {*} Returns the placeholder value.
+   */
+  function getHolder(func) {
+    var object = func;
+    return object.placeholder;
+  }
+  
+  module.exports = getHolder;
+  
+
+});
