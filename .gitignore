@@ -1,7 +1,6 @@
 data/cache
 src/.umi/
 .idea/
-app.conf
 .history/
 npm-debug.log
 yarn-error.log
