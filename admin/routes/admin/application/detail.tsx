@@ -68,7 +68,7 @@ export default class Appdetail extends React.Component<any, any> {
                             "method": "get",
                             "url": Config.AUTHORIZATION_ADDRESS+"?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${app_id}'",
                             "sendOn": "this.default_authorization_id !=\"\"",
-                            "adaptor": "\r\nconsole.log(payload.data);\r\nconsole.log(payload.data.items);\r\nvar options = [];\r\nfor (var i = 0; i < payload.data.items.length; i++) {\r\n    console.log(payload.data.items[i].id);\r\n    console.log(payload.data.items[i]);\r\n    var datas = { label: payload.data.items[i].name, value: payload.data.items[i].id }\r\n    console.log(datas);\r\n    options[i] = datas\r\n}\r\npayload.data.options = options;\r\n\r\nreturn {\r\n    ...payload, data: payload.data\r\n};\r\n"
+                            "adaptor": "\r\nconsole.log(payload.data); if(typeof payload.data.items==undefined){return false;}   \r\nconsole.log(payload.data.items);\r\nvar options = [];\r\nfor (var i = 0; i < payload.data.items.length; i++) {\r\n    console.log(payload.data.items[i].id);\r\n    console.log(payload.data.items[i]);\r\n    var datas = { label: payload.data.items[i].name, value: payload.data.items[i].id }\r\n    console.log(datas);\r\n    options[i] = datas\r\n}\r\npayload.data.options = options;\r\n\r\nreturn {\r\n    ...payload, data: payload.data\r\n};\r\n"
                         },
                         "description": "选择用户注册后的<code>默认权限组</code>，仅从当前配置的应用注册有效果"
                     }

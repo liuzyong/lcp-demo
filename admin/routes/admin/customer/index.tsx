@@ -148,7 +148,7 @@ const schema = {
                                                 "valueField": "id",
                                                 "labelField": "app_name",
                                                 "label": "选择关联应用",
-                                                "source": Config.PRODUCT_ADDRESS+"/product",
+                                                "source": Config.PRODUCT_ADDRESS,
                                                 "size": "lg",
                                                 "value": "",
                                                 "multiple": false,
