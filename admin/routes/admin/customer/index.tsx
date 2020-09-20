@@ -1,6 +1,6 @@
 import schema2component from "../../../utils/schema2component";
 
-
+import { Config } from "../../../config/Config";
 
 const schema = { 
     "type": "page",
@@ -10,7 +10,7 @@ const schema = {
             "type": "crud",
             "api": {
                 "method": "post",
-                "url": "http://127.0.0.1:5212/v1/user/",
+                "url": Config.User_ADDRESS,
                 "requestAdaptor": "api.method = \"get\"\r\nif (api.data.keywords && api.data.keywords != undefined) {\r\n    api.data.query = \"type:normal,username\" + \":\" + api.data.keywords\r\n} else {\r\n    api.data.query = \"type:normal\"\r\n}\r\nreturn api;"
             },
             "filter": {
@@ -61,7 +61,7 @@ const schema = {
                                 "body": [
                                     {
                                         "type": "form",
-                                        "api": "put:http://127.0.0.1:5212/v1/user/$id",
+                                        "api": "put:"+Config.User_ADDRESS+"/$id",
                                         "title": "编辑用户",
                                         "controls": [
                                             {
@@ -123,7 +123,7 @@ const schema = {
                             "actionType": "ajax",
                             "tooltip": "删除",
                             "confirmText": "您确认要删除?",
-                            "api": "delete:http://127.0.0.1:5212/v1/user/$id"
+                            "api": "delete:"+Config.User_ADDRESS+"/$id"
                         },
                         {
                             "size": "sm",
@@ -138,7 +138,7 @@ const schema = {
                                         "type": "form",
                                         "api": {
                                             "method": "put",
-                                            "url": "http://127.0.0.1:5212/v1/authorization/${authorization_id}"
+                                            "url": Config.AUTHORIZATION_ADDRESS+"/${authorization_id}"
                                         },
                                         "controls": [
                                             {
@@ -148,7 +148,7 @@ const schema = {
                                                 "valueField": "id",
                                                 "labelField": "app_name",
                                                 "label": "选择关联应用",
-                                                "source": "http://127.0.0.1:5212/v1/product",
+                                                "source": Config.PRODUCT_ADDRESS+"/product",
                                                 "size": "lg",
                                                 "value": "",
                                                 "multiple": false,
@@ -222,7 +222,7 @@ const schema = {
                                                 "name": "operation",
                                                 "source": {
                                                     "method": "get",
-                                                    "url": "http://127.0.0.1:5212/v1/authorization?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${entity}'",
+                                                    "url":  Config.AUTHORIZATION_ADDRESS+"?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${entity}'",
                                                     "sendOn": "this.entity !=\"\"",
                                                     "adaptor": "\r\nconsole.log(payload.data);\r\nconsole.log(payload.data.items);\r\nvar options = [];\r\nfor (var i = 0; i < payload.data.items.length; i++) {\r\n    console.log(payload.data.items[i].id);\r\n    console.log(payload.data.items[i]);\r\n    var datas = { label: payload.data.items[i].name, value: payload.data.items[i].id }\r\n    console.log(datas);\r\n    options[i] = datas\r\n}\r\npayload.data.options = options;\r\n\r\nreturn {\r\n    ...payload, data: payload.data\r\n};\r\n"
                                                 },
@@ -241,7 +241,7 @@ const schema = {
                                         ],
                                         "initApi": {
                                             "method": "get",
-                                            "url": "http://127.0.0.1:5212/v1/authorization/${authorization_id}"
+                                            "url":  Config.AUTHORIZATION_ADDRESS+"/${authorization_id}"
                                         }
                                     }
                                 ],
@@ -274,7 +274,7 @@ const schema = {
                         "type": "form",
                         "api": {
                             "method": "post",
-                            "url": "http://127.0.0.1:5212/v1/user/",        
+                            "url": Config.User_ADDRESS,        
                             "requestAdaptor": "var data = {\r\n    type: api.data.type,\r\n    username: api.data.username,\r\n    password: api.data.password,\r\n    email: api.data.email,\r\n    phone: api.data.phone,\r\n    user_type: api.data.user_type,\r\n    authorization: {\r\n        type: \"user_page_authorization\",\r\n        entity: api.data.entity,\r\n        operation: api.data.operation,\r\n    }\r\n}\r\napi.data = data\r\nreturn api;"
 
                         },
@@ -346,7 +346,7 @@ const schema = {
                                 "valueField": "id",
                                 "labelField": "app_name",
                                 "label": "选择关联应用",
-                                "source": "http://127.0.0.1:5212/v1/product",
+                                "source": Config.PRODUCT_ADDRESS,
                                 "size": "lg",
                                 "value": "",
                                 "multiple": false,
@@ -420,7 +420,7 @@ const schema = {
                                 "name": "operation",
                                 "source": {
                                     "method": "get",
-                                    "url": "http://127.0.0.1:5212/v1/authorization?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${entity}'",
+                                    "url": Config.AUTHORIZATION_ADDRESS+"?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${entity}'",
                                     "sendOn": "this.entity !=\"\"",
                                     "adaptor": "\r\nconsole.log(payload.data);\r\nconsole.log(payload.data.items);\r\nvar options = [];\r\nfor (var i = 0; i < payload.data.items.length; i++) {\r\n    console.log(payload.data.items[i].id);\r\n    console.log(payload.data.items[i]);\r\n    var datas = { label: payload.data.items[i].name, value: payload.data.items[i].id }\r\n    console.log(datas);\r\n    options[i] = datas\r\n}\r\npayload.data.options = options;\r\n\r\nreturn {\r\n    ...payload, data: payload.data\r\n};\r\n"
                                 },

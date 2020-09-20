@@ -4,8 +4,9 @@ import copy from 'copy-to-clipboard';
 import {render as renderAmis} from 'amis';
 import {alert, confirm} from 'amis/lib/components/Alert';
 import {toast} from 'amis/lib/components/Toast';
-export interface AppManageProps {};
-let baseUrl="http://127.0.0.1:5212/v1/config";
+export interface AppManageProps { };
+import { Config } from "../../../config/Config";
+
 
 export default class PageManage extends React.Component<any, any> {
   render() {
@@ -20,7 +21,7 @@ export default class PageManage extends React.Component<any, any> {
             "body": [
                 {
                     "type": "crud",
-                    "api": "http://127.0.0.1:5212/v1/config?type=menu&names='app_id':'${app_id}'",
+                    "api": Config.Config_ADDRESS+"?type=menu&names='app_id':'${app_id}'",
                     "columns": [
                         {
                             "name": "id",
@@ -66,7 +67,7 @@ export default class PageManage extends React.Component<any, any> {
                                             {
                                                 "type": "form",
                                                 "title": "表单",
-                                                "api": "put:http://127.0.0.1:5212/v1/config/$id",
+                                                "api": "put:"+ Config.Config_ADDRESS+"/$id",
                                                 "controls": [
                                                     {
                                                         "label": "页面名称",
@@ -94,7 +95,7 @@ export default class PageManage extends React.Component<any, any> {
                                     "actionType": "ajax",
                                     "tooltip": "删除",
                                     "confirmText": "您确认要删除?",
-                                    "api": "delete:http://127.0.0.1:5212/v1/config/$id"
+                                    "api": "delete:"+Config.Config_ADDRESS+"/$id"
                                 }
                             ],
                             "toggled": true
@@ -140,7 +141,7 @@ export default class PageManage extends React.Component<any, any> {
                           {
                               "type": "form",
                                "title": "表单",
-                              "api": "post:http://127.0.0.1:5212/v1/config",
+                              "api": "post:"+Config.Config_ADDRESS,
                               "controls": [
                                   {
                                       "label": "页面名称",

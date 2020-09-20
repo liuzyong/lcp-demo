@@ -1,19 +1,21 @@
 import * as React from 'react';
+import {types} from 'mobx-state-tree';
 import AMisRenderer from '../editor/AMisRenderer';
 import { inject, observer } from 'mobx-react';
 import { IMainStore } from '../store/database';
 import { RouteComponentProps, withRouter } from 'react-router';
 import Qs from 'qs'
 import axios from 'axios';
+import { Config } from "../config/Config";
+
 let ContextPath = '';
-
-
 // gh-pages 环境时
 if (process.env.NODE_ENV === 'production') {
     ContextPath = '/amis-admin'
 }
-console.log(process.env.NODE_ENV);
-// console.log(process.env.SERVICE_URL);
+
+
+ContextPath = '/amis-admin'
 
 interface LoginProps extends RouteComponentProps<any> {
     store: IMainStore;
@@ -22,7 +24,7 @@ interface LoginProps extends RouteComponentProps<any> {
 const schema = {
     type: 'form',
     submitText: '登录',
-    api: 'post:http://127.0.0.1:5212/v1/user/login',
+    api: 'post:'+Config.LOGIN_ADDRESS,
     wrapWithPanel: false,
     messages: {
         saveSuccess: '登录成功，欢迎光临！'
@@ -100,27 +102,36 @@ export default class LoginRoute extends React.Component<LoginProps> {
         var params=this.props.location.search;
           console.log('params:',params);
       
-        if(params){ 
+        if (params) { 
+           
+                        
             var obj = Qs.parse(params, { ignoreQueryPrefix: true });//忽略符号? { ignoreQueryPrefix: true }
-            let app_id=obj.app_id;  
-            this.getPageAuthorization(value,app_id,store)
-            store.user.login(value.id,String(app_id),value.username,value.user_type); 
-            store.afterCreate()
-            window.location.href=`${ContextPath}/#/home`+"?app_id="+app_id
-            return ;
-        }else{ 
+            let app_id = obj.app_id;  
+            console.log("obj:");  
+            console.log(obj);  
+            return  this.getPageAuthorization(value,app_id,store)
+
+        } else { 
+            console.log("value.authorization_id");  
+                        
          var r= window.location.href.match(new RegExp("[^\?\&]" + "?app_id" + "=([^&]*)(&|$)", "i"));
             if (r != null){   
                 var app_id = unescape(r[1]);
-                app_id=app_id.replace("#/login","");
-                return this.getPageAuthorization(value,app_id,store)
+                app_id = app_id.replace("#/login", "");
+                console.log("unescape app_id:");  
+                console.log(app_id);  
+                return this.getPageAuthorization(value, app_id, store)
+                
+            } else {
+                 alert("登录链接缺少app_id");
                 
             } 
         }
+
     }
 
      getPageAuthorization(value:any,app_id:any,store:any): any{
-        var app =  axios.get("http://127.0.0.1:5212/v1/product/"+app_id)
+        var app =  axios.get(Config.PRODUCT_ADDRESS+"/"+app_id)
         .then(app => {
             if (app.data.status == 0) {
                      let authorization_id = '';
@@ -136,12 +147,12 @@ export default class LoginRoute extends React.Component<LoginProps> {
                         ////如果用户已经有权限
                         authorization_id=value.authorization_id;
                     }
-                    var res =  axios.get("http://127.0.0.1:5212/v1/authorization/"+authorization_id)
+                    var res =  axios.get(Config.AUTHORIZATION_ADDRESS+"/"+authorization_id)
                     .then(res => {
                         if (res.data.status == 0) {
                                     //如果用户已经有权限
                             if (typeof value.authorization_id != "undefined") {
-                                  axios.get("http://127.0.0.1:5212/v1/authorization/" + res.data.data.operation)
+                                  axios.get(Config.AUTHORIZATION_ADDRESS +"/"+ res.data.data.operation)
                                     .then(authorization => {
                                             if(authorization.data.status==0){
                                                 window.localStorage.setItem('authorization',authorization.data.data.entity);

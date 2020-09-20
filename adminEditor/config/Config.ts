@@ -1,0 +1,20 @@
+import {
+    types,
+    getEnv
+} from "mobx-state-tree";
+
+let BASE_SERVICE_ADDRESS = "http://127.0.0.1:5212/v1/";
+let ADMIN_ADDRESS = "http://127.0.0.1:5207";
+let ADMIN_EDIT_ADDRESS = "http://127.0.0.1:5204";
+
+export const Config ={
+    APP_ENV: "dev",
+    ADMIN_ADDRESS: ADMIN_ADDRESS,
+    ADMIN_EDIT_ADDRESS: ADMIN_EDIT_ADDRESS,
+    BASE_SERVICE_ADDRESS: BASE_SERVICE_ADDRESS,
+    PRODUCT_ADDRESS: BASE_SERVICE_ADDRESS+"product",
+    AUTHORIZATION_ADDRESS:  BASE_SERVICE_ADDRESS+"authorization",
+    LOGIN_ADDRESS:  BASE_SERVICE_ADDRESS+"user/login",
+    Config_ADDRESS:  BASE_SERVICE_ADDRESS+"config",
+    User_ADDRESS:  BASE_SERVICE_ADDRESS+"user",
+  } 

@@ -5,6 +5,7 @@ import {render as renderAmis} from 'amis';
 import {alert, confirm} from 'amis/lib/components/Alert';
 import {toast} from 'amis/lib/components/Toast';
 export interface AppeditProps {};
+import { Config } from "../../../config/Config";
 
 
 
@@ -56,7 +57,7 @@ export default class Appdetail extends React.Component<any, any> {
                           "name": "app_logo",
                           "imageClassName": "r w-full",
                           "src": "https://fex.bdstatic.com/n/static/amis/renderers/crud/field/placeholder_cfad9b1.png",
-                          "reciever": "http://127.0.0.1:5212/v1/file",
+                          "reciever": Config.File_ADDRESS,
                       },
                     {
                         "label": "选择权限组",
@@ -65,7 +66,7 @@ export default class Appdetail extends React.Component<any, any> {
                         "name": "default_authorization_id",
                         "source": {
                             "method": "get",
-                            "url": "http://127.0.0.1:5212/v1/authorization?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${app_id}'",
+                            "url": Config.AUTHORIZATION_ADDRESS"?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${app_id}'",
                             "sendOn": "this.default_authorization_id !=\"\"",
                             "adaptor": "\r\nconsole.log(payload.data);\r\nconsole.log(payload.data.items);\r\nvar options = [];\r\nfor (var i = 0; i < payload.data.items.length; i++) {\r\n    console.log(payload.data.items[i].id);\r\n    console.log(payload.data.items[i]);\r\n    var datas = { label: payload.data.items[i].name, value: payload.data.items[i].id }\r\n    console.log(datas);\r\n    options[i] = datas\r\n}\r\npayload.data.options = options;\r\n\r\nreturn {\r\n    ...payload, data: payload.data\r\n};\r\n"
                         },
@@ -75,13 +76,13 @@ export default class Appdetail extends React.Component<any, any> {
                   "submitText": "确认修改",
                   "api": {
                     "method": "put",
-                    "url": "http://127.0.0.1:5212/v1/product/$app_id",
-                    "requestAdaptor": "console.log(api); if (api.data.app_logo) {\r\n    api.data.app_logo = api.data.app_logo.replace(/http\\:\\/\\/127.0.0.1:5212\\//, \"\")\r\n}"
+                    "url": Config.PRODUCT_ADDRESS+"/$app_id",
+                    "requestAdaptor": "console.log(api); if (api.data.app_logo) {\r\n    api.data.app_logo = api.data.app_logo.replace(/"+Config.STATIC_FILE_ADDRESS+"\\//, \"\")\r\n}"
                    },
                    "initApi": {
                     "method": "get",
-                    "url": "http://127.0.0.1:5212/v1/product/$app_id",
-                     "adaptor": "payload.data.app_logo = \"http://127.0.0.1:5212/\" + payload.data.app_logo\r\nreturn {\r\n    ...payload, data: payload.data\r\n};",
+                    "url": Config.PRODUCT_ADDRESS+"/$app_id",
+                     "adaptor": "payload.data.app_logo = \""+Config.STATIC_FILE_ADDRESS+"/\" + payload.data.app_logo\r\nreturn {\r\n    ...payload, data: payload.data\r\n};",
                    }
               
                 } 
@@ -118,7 +119,7 @@ export default class Appdetail extends React.Component<any, any> {
                     "confirmText": "删除后数据无法找回,确认要删除这个应用吗？",
                     "api": {
                       "method": "delete",
-                      "url":  "http://127.0.0.1:5212/v1/product/$app_id",
+                      "url":  Config.PRODUCT_ADDRESS+"/$app_id",
                     },
                     "level": "danger",
                     "size": "md",

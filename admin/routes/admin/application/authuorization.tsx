@@ -5,7 +5,7 @@ import {render as renderAmis} from 'amis';
 import {alert, confirm} from 'amis/lib/components/Alert';
 import {toast} from 'amis/lib/components/Toast';
 export interface AppauthuorizationProps {};
-
+import { Config } from "../../../config/Config";
 
 export default class Appauthuorization extends React.Component<any, any> {
   render() {
@@ -20,7 +20,7 @@ export default class Appauthuorization extends React.Component<any, any> {
             "body": [
               {
                   "type": "crud",
-                  "api": "http://127.0.0.1:5212/v1/authorization?type=app_page&perPage=12&query=type:app_page&page=1&names='app_id':'$app_id'",
+                  "api": Config.AUTHORIZATION_ADDRESS+"?type=app_page&perPage=12&query=type:app_page&page=1&names='app_id':'$app_id'",
                   "placeholder": "当前组内, 还没有配置任何权限.",
                   "title": null,
                   "listItem": {
@@ -37,7 +37,7 @@ export default class Appauthuorization extends React.Component<any, any> {
                                   "type": "form",
                                   "api": {
                                     "method": "put",
-                                    "url": "http://127.0.0.1:5212/v1/authorization/${id}"
+                                    "url": Config.AUTHORIZATION_ADDRESS+"/${id}"
                                   },
                                   "controls": [
                                     {
@@ -79,7 +79,7 @@ export default class Appauthuorization extends React.Component<any, any> {
                                         "valueField": "id",
                                         "labelField": "label",
                                         "label": "多选",
-                                        "source": "http://127.0.0.1:5212/v1/config?type=menu&names='app_id':'${app_id}'",
+                                        "source": Config.Config_ADDRESS+"?type=menu&names='app_id':'${app_id}'",
                                         "size": "lg",
                                         "value": "",
                                         "multiple": true,
@@ -119,7 +119,7 @@ export default class Appauthuorization extends React.Component<any, any> {
                                             ],
                                             "pickerMode": true,
                                             "messages": {},
-                                            "api": "http://127.0.0.1:5212/v1/config?type=menu&names='app_id':'${app_id}'",
+                                            "api": Config.Config_ADDRESS+"?type=menu&names='app_id':'${app_id}'",
                                             "mode": "table"
                                         }
                                     }
@@ -134,7 +134,7 @@ export default class Appauthuorization extends React.Component<any, any> {
                             "icon": "fa fa-times",
                             "confirmText": "您确定要移除该权限组?",
                             "actionType": "ajax",
-                            "api": "delete:https://houtai.baidu.com/api/mock2/notFound"
+                            "api": "delete:"+Config.AUTHORIZATION_ADDRESS+"/${id}"
                         }
                     ]
                    },
@@ -150,7 +150,7 @@ export default class Appauthuorization extends React.Component<any, any> {
                                       "title": "页面选择",
                                       "mode": "horizontal",
                                       "type": "form",
-                                      "api": "http://127.0.0.1:5212/v1/authorization",
+                                      "api": Config.AUTHORIZATION_ADDRESS,
                                       "controls": [
                                           {
                                               "label": "权限名称",
@@ -192,7 +192,7 @@ export default class Appauthuorization extends React.Component<any, any> {
                                               "valueField": "id",
                                               "labelField": "label",
                                               "label": "多选",
-                                              "source": "http://127.0.0.1:5212/v1/config?type=menu&names='app_id':'${app_id}'",
+                                              "source": Config.Config_ADDRESS+"?type=menu&names='app_id':'${app_id}'",
                                               "size": "lg",
                                               "value": "",
                                               "multiple": true,
@@ -232,7 +232,7 @@ export default class Appauthuorization extends React.Component<any, any> {
                                                   ],
                                                   "pickerMode": true,
                                                   "messages": {},
-                                                  "api": "http://127.0.0.1:5212/v1/config?type=menu&names='app_id':'${app_id}'",
+                                                  "api": Config.Config_ADDRESS+"?type=menu&names='app_id':'${app_id}'",
                                                   "mode": "table"
                                               }
                                           }

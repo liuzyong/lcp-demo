@@ -5,10 +5,8 @@ import axios from 'axios';
 import qs from 'qs';
 import { number } from 'mobx-state-tree/dist/internal';
 import { User } from "./User";
+import { Config } from "../config/Config";
 let pagIndex = 1;
-let databaseUrl="http://127.0.0.1:5212/v1/config?type=menu";
-let baseUrl="http://127.0.0.1:5212/v1/config";
-let productBaseUrl="http://127.0.0.1:5212/v1/product";
 
 const addpageShow = false;
 
@@ -102,7 +100,7 @@ export const MainStore = types
             console.log('addPage');
             addPages(data, String(`${++pagIndex}`));
             const app_id = window.localStorage.getItem('app_id');
-            var res = await axios.post(databaseUrl,
+            var res = await axios.post(Config.Config_ADDRESS+"?type=menu",
                 { app_id: app_id, type: "menu", label: data.label,path: data.path, icon: data.icon, schema: JSON.stringify(data.schema) });
                
             if (res.data.status == 0) { //保存成功
@@ -148,7 +146,7 @@ export const MainStore = types
             const app_id = window.localStorage.getItem('app_id');
             var obj = { app_id: app_id, type: "menu", label: data.label, icon: data.icon,path:data.path}
             ;
-            axios.put(baseUrl + "/" + Number(self.pages[index].id), obj)
+            axios.put(Config.Config_ADDRESS + "/" + Number(self.pages[index].id), obj)
 
                 .then(res => {
                     console.log(res)
@@ -165,7 +163,7 @@ export const MainStore = types
             console.log(self.pages[index]);
             self.pages.splice(index, 1);
          
-            axios.delete(baseUrl + "/" +databaseid)
+            axios.delete(Config.Config_ADDRESS + "/" +databaseid)
 
                 .then(res => {
                     if (res.data.status == 0) {
@@ -183,7 +181,7 @@ export const MainStore = types
             console.log('updatePageSchemaAt');
             self.pages[index].updateSchema(self.schema);
             var databaseid = self.pages[index].id;
-            var res = await axios.put(baseUrl+"/"+databaseid,
+            var res = await axios.put(Config.Config_ADDRESS+"/"+databaseid,
                 { schema: JSON.stringify(self.schema) });
 
             if (res.data.status == 0) { //保存成功
@@ -250,7 +248,7 @@ export const MainStore = types
             }
             
                 //获取页面信息
-                var res =  axios.get(databaseUrl+"&page=1&perPage=200&names='app_id':"+"'"+app_id+"'")  
+                var res =  axios.get(Config.Config_ADDRESS+"&page=1&perPage=200&names='app_id':"+"'"+app_id+"'")  
                  .then(res => {
                     if(res.data.status==0){
                         if (typeof window !== 'undefined' && window.localStorage) {

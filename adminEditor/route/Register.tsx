@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react';
 import { IMainStore } from '../store/index';
 import { RouteComponentProps, withRouter } from 'react-router';
 import Qs from 'qs'
+import { Config } from "../config/Config";
 import axios from 'axios';
 let ContextPath = '';
 
@@ -21,7 +22,7 @@ interface RegisterProps extends RouteComponentProps<any> {
 const schema = {
     type: 'form',
     submitText: '登录',
-    api: 'post:http://127.0.0.1:5212/v1/user',
+    api: 'post:'+Config.User_ADDRESS,
     wrapWithPanel: false,
     messages: {
         saveSuccess: '登录成功，欢迎光临！'

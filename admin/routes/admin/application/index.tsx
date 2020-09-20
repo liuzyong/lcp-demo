@@ -1,14 +1,6 @@
 import schema2component from "../../../utils/schema2component";
-
-// id: 1,
-// name: '张三',
-// age: 18,
-// tel: '13111011101',
-// gender: 1,
-// company: 'XX XX XX'
-
+import { Config } from "../../../config/Config";
 const schema = {
-    "$schema": "https://houtai.baidu.com/v2/schemas/page.json#",
     "type": "page",
     "title": "应用列表",
     "remark": "操作文档",
@@ -23,7 +15,7 @@ const schema = {
                 "title": "创建可视化应用",
                 "body": {
                     "type": "form",
-                    "api": "post:http://127.0.0.1:5212/v1/product",
+                    "api": "post:"+Config.PRODUCT_ADDRESS,
                     "controls": [
                         {
                             "type": "text",
@@ -63,7 +55,7 @@ const schema = {
                             "name": "app_logo",
                             "imageClassName": "r w-full",
                             "src": "https://fex.bdstatic.com/n/static/amis/renderers/crud/field/placeholder_cfad9b1.png",
-                            "reciever": "http://127.0.0.1:5212/v1/file",
+                            "reciever": Config.File_ADDRESS,
                         },
                         {
                             "type": "divider"
@@ -78,7 +70,7 @@ const schema = {
             "type": "crud",
             "api": {
                 "method": "post",
-                "url": "http://127.0.0.1:5212/v1/product?query=type:app&page=1&perPage=12",
+                "url":  Config.PRODUCT_ADDRESS+"?query=type:app&page=1&perPage=12",
                 "requestAdaptor": "api.method = \"get\"\r\nif (api.data.keywords && api.data.keywords != undefined) {\r\n    api.data.names = \"'\" + \"app_name\" + \"'\" + \":\" + \"'\" + api.data.keywords + \"'\"\r\n}\r\nreturn api;"
             },
             "defaultParams": {
@@ -93,7 +85,7 @@ const schema = {
                     "title": "$app_name",
                     "subTitle": "$app_description",
                     "description": "$app_description",
-                    "avatar": "http://127.0.0.1:5212/${app_logo | raw}",
+                    "avatar": Config.STATIC_FILE_ADDRESS+"/${app_logo | raw}",
                     "highlight": "$isSuperAdmin",
                     "avatarClassName": "pull-left thumb-md avatar b-3x m-r"
                 },
@@ -103,7 +95,7 @@ const schema = {
                         "label": "设计",
                         "type": "button",
                         "actionType": "url",
-                        "url": "http://127.0.0.1:5204/?app_id=${id}"
+                        "url": Config.ADMIN_EDIT_ADDRESS+"/?app_id=${id}"
                     },
                     {
                         "label": "配置",
@@ -141,5 +133,4 @@ const schema = {
 
 
 
-// "body": "\n      <% if (data.roles && data.roles.length) { %>\n        <% data.roles.map(function(role) { %>\n          <span class=\"label label-default\"><%- role.name %></span>\n        <% }) %>\n      <% } else { %>\n        <p class=\"text-muted\">没有分配角色</p>\n      <% } %>\n     
 export default schema2component(schema);
