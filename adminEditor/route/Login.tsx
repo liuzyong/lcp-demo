@@ -11,11 +11,10 @@ import { Config } from "../config/Config";
 let ContextPath = '';
 // gh-pages 环境时
 if (process.env.NODE_ENV === 'production') {
-    ContextPath = '/amis-admin'
+   // ContextPath = '/amis-admin'
 }
 
 
-ContextPath = '/amis-admin'
 
 interface LoginProps extends RouteComponentProps<any> {
     store: IMainStore;
