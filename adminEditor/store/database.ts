@@ -248,7 +248,7 @@ export const MainStore = types
             }
             
                 //获取页面信息
-                var res =  axios.get(Config.Config_ADDRESS+"&page=1&perPage=200&names='app_id':"+"'"+app_id+"'")  
+                var res =  axios.get(Config.Config_ADDRESS+"?type=menu&page=1&perPage=200&names='app_id':"+"'"+app_id+"'")  
                  .then(res => {
                     if(res.data.status==0){
                         if (typeof window !== 'undefined' && window.localStorage) {
