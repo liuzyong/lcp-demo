@@ -208,6 +208,7 @@ export const MainStore = types
           
             const app_id = window.localStorage.getItem('app_id');
             const user_id = window.localStorage.getItem('user_id');
+            const user_type = window.localStorage.getItem('user_id');
             if(!app_id){
                 return false;
             }
@@ -259,14 +260,18 @@ export const MainStore = types
                             var pageData=[];
                                 //去掉没有权限的页面
                             for (var i = 0; i < res.data.data.items.length; i++){
-                               for(var j=0;j<authorizationArray.length;j++){
-                                   if(res.data.data.items[i].id==authorizationArray[j]){
-                                    pageData.push(res.data.data.items[i])
-                                   }
-                                }
                                 if (typeof res.data.data.items[i].schema != undefined) {
-                                        res.data.data.items[i].schema=JSON.parse(res.data.data.items[i].schema);
+                                    res.data.data.items[i].schema=JSON.parse(res.data.data.items[i].schema);
                                 }
+                                if (user_type != "designer") {
+                                    for(var j=0;j<authorizationArray.length;j++){
+                                        if(res.data.data.items[i].id==authorizationArray[j]){
+                                         pageData.push(res.data.data.items[i])
+                                        }
+                                     }
+                                }
+                               
+                             
                             }
 
 
