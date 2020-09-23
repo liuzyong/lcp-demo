@@ -208,7 +208,7 @@ export const MainStore = types
           
             const app_id = window.localStorage.getItem('app_id');
             const user_id = window.localStorage.getItem('user_id');
-            const user_type = window.localStorage.getItem('user_id');
+            const user_type = window.localStorage.getItem('user_type');
             if(!app_id){
                 return false;
             }
@@ -222,7 +222,7 @@ export const MainStore = types
             console.log("user_id:",user_id);
             console.log("app_id:",app_id);    
 
-            console.log('afterCreate');
+            console.log('user_type:',user_type);
             //更新app_id
             var params=location.search;
           
@@ -259,11 +259,16 @@ export const MainStore = types
                             var  authorizationArray=authorization.split(",");
                             var pageData=[];
                                 //去掉没有权限的页面
+                                console.log("=========res.data.data.items");           
+                                console.log(pageData);  
                             for (var i = 0; i < res.data.data.items.length; i++){
                                 if (typeof res.data.data.items[i].schema != undefined) {
                                     res.data.data.items[i].schema=JSON.parse(res.data.data.items[i].schema);
-                                }
-                                if (user_type != "designer") {
+                                } 
+                                if (user_type == "designer") {
+                                    pageData.push(res.data.data.items[i])
+                                  
+                                }else{
                                     for(var j=0;j<authorizationArray.length;j++){
                                         if(res.data.data.items[i].id==authorizationArray[j]){
                                          pageData.push(res.data.data.items[i])
@@ -273,7 +278,8 @@ export const MainStore = types
                                
                              
                             }
-
+                            console.log("=========pageData");           
+                            console.log(pageData);            
 
                             if (storeData && pageData) {
                                 var databaseData = JSON.parse(storeData);
