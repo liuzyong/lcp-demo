@@ -211,6 +211,13 @@ export const MainStore = types
             const user_type = window.localStorage.getItem('user_type');
             if(!app_id){
                 return false;
+            }else{
+                var res =  axios.get(Config.PRODUCT_ADDRESS+"/"+app_id)  
+                 .then(res => {
+                    if(res.data.status==0){
+                        window.localStorage.setItem("app_info",res.data.data);
+                    }
+                });
             }
         
            

@@ -274,7 +274,7 @@ const schema = {
                         "type": "form",
                         "api": {
                             "method": "post",
-                            "url": Config.User_ADDRESS,        
+                            "url": "",        
                             "requestAdaptor": "var data = {\r\n    type: api.data.type,\r\n    username: api.data.username,\r\n    password: api.data.password,\r\n    email: api.data.email,\r\n    phone: api.data.phone,\r\n    user_type: api.data.user_type,\r\n    authorization: {\r\n        type: \"user_page_authorization\",\r\n        entity: api.data.entity,\r\n        operation: api.data.operation,\r\n    }\r\n}\r\napi.data = data\r\nreturn api;"
 
                         },
@@ -346,7 +346,7 @@ const schema = {
                                 "valueField": "id",
                                 "labelField": "app_name",
                                 "label": "选择关联应用",
-                                "source": Config.PRODUCT_ADDRESS,
+                                "source": "",
                                 "size": "lg",
                                 "value": "",
                                 "multiple": false,
@@ -420,7 +420,7 @@ const schema = {
                                 "name": "operation",
                                 "source": {
                                     "method": "get",
-                                    "url": Config.AUTHORIZATION_ADDRESS+"?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${entity}'",
+                                    "url":""+"?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${entity}'",
                                     "sendOn": "this.entity !=\"\"",
                                     "adaptor": "\r\nconsole.log(payload.data);\r\nconsole.log(payload.data.items);\r\nvar options = [];\r\nfor (var i = 0; i < payload.data.items.length; i++) {\r\n    console.log(payload.data.items[i].id);\r\n    console.log(payload.data.items[i]);\r\n    var datas = { label: payload.data.items[i].name, value: payload.data.items[i].id }\r\n    console.log(datas);\r\n    options[i] = datas\r\n}\r\npayload.data.options = options;\r\n\r\nreturn {\r\n    ...payload, data: payload.data\r\n};\r\n"
                                 },
