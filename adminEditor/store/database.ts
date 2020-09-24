@@ -215,7 +215,9 @@ export const MainStore = types
                 var res =  axios.get(Config.PRODUCT_ADDRESS+"/"+app_id)  
                  .then(res => {
                     if(res.data.status==0){
-                        window.localStorage.setItem("app_info",res.data.data);
+                        window.localStorage.setItem("app_name",res.data.data.app_name);
+                        window.localStorage.setItem("app_logo",res.data.data.app_logo);
+                        window.localStorage.setItem("default_authorization_id",res.data.data.default_authorization_id);
                     }
                 });
             }
