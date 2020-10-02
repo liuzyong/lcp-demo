@@ -1,130 +1,126 @@
 package models
 
 import (
+	"errors"
 	"fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
 	"strconv"
 	"strings"
-	"errors"
 	"time"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 )
 
-
 type Attributes struct {
-	Id          uint64       `orm:"column(id);pk"`
+	Id          uint64    `orm:"column(id);pk"`
 	SourceId    uint64    `orm:"column(source_id)" description:"目标id"`
-	Name         string    `orm:"column(name);size(64)" description:"自定义字段"`
-	Type         string    `orm:"column(type);size(64)" description:"数据类型"`
+	Name        string    `orm:"column(name);size(64)" description:"自定义字段"`
+	Type        string    `orm:"column(type);size(64)" description:"数据类型"`
 	Language    string    `orm:"column(language);size(20)" description:"语言"`
 	Remark      string    `orm:"column(remark);size(255)" description:"字段名"`
 	Value       string    `orm:"column(value);size(255)" description:"字段"`
 	Format      string    `orm:"column(format);size(255)" description:"数据类型"`
-	v1      string    `orm:"column(v1);size(255)" description:"预留字段"`
-	v2      string    `orm:"column(v2);size(255)" description:"预留字段"`
-	v3      string    `orm:"column(format);size(255)" description:"预留字段"`
-	v4      string    `orm:"column(format);size(255)" description:"预留字段"`
-	v5      string    `orm:"column(format);size(255)" description:"预留字段"`
-	v6      string    `orm:"column(format);size(255)" description:"预留字段"`
+	v1          string    `orm:"column(v1);size(255)" description:"预留字段"`
+	v2          string    `orm:"column(v2);size(255)" description:"预留字段"`
+	v3          string    `orm:"column(format);size(255)" description:"预留字段"`
+	v4          string    `orm:"column(format);size(255)" description:"预留字段"`
+	v5          string    `orm:"column(format);size(255)" description:"预留字段"`
+	v6          string    `orm:"column(format);size(255)" description:"预留字段"`
 	CreatedTime time.Time `orm:"column(created_time);type(timestamp);null"`
 	UpdatedTime time.Time `orm:"column(updated_time);type(timestamp);null"`
 }
 
-type Attribute struct{
+type Attribute struct {
 	SourceId uint64 `json:"source_id"`
-	Type string `json:"type"`
-	Name string `json:"name"`
-	Remark string `json:"remark"`
-	Value string `json:"value"`
-	Format string `json:"format"`
+	Type     string `json:"type"`
+	Name     string `json:"name"`
+	Remark   string `json:"remark"`
+	Value    string `json:"value"`
+	Format   string `json:"format"`
 	Language string `json:"language"`
-	v1      string `json:"v1"`
-	v2      string `json:"v2"`
-	v3      string `json:"v3"`
-	v4      string `json:"v4"`
-	v5      string `json:"v5"`
-	v6      string `json:"v6"`
+	v1       string `json:"v1"`
+	v2       string `json:"v2"`
+	v3       string `json:"v3"`
+	v4       string `json:"v4"`
+	v5       string `json:"v5"`
+	v6       string `json:"v6"`
 }
 
-func AddAttributes(attribute *Attribute,SourceId uint64,Type string) (bool){
-	id :=SnowflakeId()
+func AddAttributes(attribute *Attribute, SourceId uint64, Type string) bool {
+	id := SnowflakeId()
 	o := orm.NewOrm()
-	sql :="INSERT INTO `attributes` (`id`, `source_id`,`type`, `name`, `language`, `remark`, `value`, `format`,  `created_time`, `updated_time`) " +
+	sql := "INSERT INTO `attributes` (`id`, `source_id`,`type`, `name`, `language`, `remark`, `value`, `format`,  `created_time`, `updated_time`) " +
 		"VALUES (?, ?,?, ?, ?, ?, ?, ?, ?, ?);"
 
-	_, err := o.Raw(sql,id,SourceId,Type,attribute.Name,"zh_CN",attribute.Remark,attribute.Value,attribute.Format,time.Now(),time.Now()).Exec()
+	_, err := o.Raw(sql, id, SourceId, Type, attribute.Name, "zh_CN", attribute.Remark, attribute.Value, attribute.Format, time.Now(), time.Now()).Exec()
 	if err != nil {
 
 		return false
 	}
-	return  true
+	return true
 }
 
-
-
-
-func UpdateAttributes(c *Attribute,SourceId uint64) (bool){
+func UpdateAttributes(c *Attribute, SourceId uint64) bool {
 	orm.Debug = true
 	o := orm.NewOrm()
-	sql :="UPDATE `attributes` SET   `language`=?, `remark`=?, `value`=?," +
-		" `format`=?, `updated_time`=?" +" WHERE `source_id`=? and `name`=?"
-	res, err := o.Raw(sql,c.Language,c.Remark,c.Value,c.Format,time.Now(),SourceId,c.Name).Exec()
+	sql := "UPDATE `attributes` SET   `language`=?, `remark`=?, `value`=?," +
+		" `format`=?, `updated_time`=?" + " WHERE `source_id`=? and `name`=?"
+	res, err := o.Raw(sql, c.Language, c.Remark, c.Value, c.Format, time.Now(), SourceId, c.Name).Exec()
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  false
+		return false
 	}
-	return  true
+	return true
 }
 
-func DeleteAttributes(SourceId uint64) (bool){
+func DeleteAttributes(SourceId uint64) bool {
 	orm.Debug = true
 	o := orm.NewOrm()
-	sql :="delete  from attributes where source_id=? "
-	res, err := o.Raw(sql,SourceId).Exec()
+	sql := "delete  from attributes where source_id=? "
+	res, err := o.Raw(sql, SourceId).Exec()
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  false
+		return false
 	}
-	return  true
+	return true
 }
 
-func GetAttributes(id uint64) (data  [] orm.Params,err error){
+func GetAttributes(id uint64) (data []orm.Params, err error) {
 	orm.Debug = true
 	o := orm.NewOrm()
-	var attributes [] orm.Params
-	num,err := o.Raw("select * from  attributes where source_id=?",id).Values(&attributes)
-	if err != nil  || num <= 0{        //处理err
-		return  data,err
+	var attributes []orm.Params
+	num, err := o.Raw("select * from  attributes where source_id=?", id).Values(&attributes)
+	if err != nil || num <= 0 { //处理err
+		return data, err
 	}
-	return attributes,nil
+	return attributes, nil
 }
 
-func GetAttributesByName(id uint64,name string,types string) (data  [] orm.Params,err error){
+func GetAttributesByName(id uint64, name string, types string) (data []orm.Params, err error) {
 	orm.Debug = true
 	o := orm.NewOrm()
-	var attributes [] orm.Params
-	num,err := o.Raw("select * from  attributes where source_id=? and name=? and type=?",id,name,types).Values(&attributes)
+	var attributes []orm.Params
+	num, err := o.Raw("select * from  attributes where source_id=? and name=? and type=?", id, name, types).Values(&attributes)
 	beego.Error(err)
-	if err != nil  || num <= 0{        //处理err
-		return  data,errors.New("not data in attributes")
+	if err != nil || num <= 0 { //处理err
+		return data, errors.New("not data in attributes")
 	}
-	return attributes,nil
+	return attributes, nil
 }
 
-func GetMapAttibutesKeyAndValue(data map[string]interface{})(key string,value string){
+func GetMapAttibutesKeyAndValue(data map[string]interface{}) (key string, value string) {
 	for k, v := range data {
-		if k=="name"{
-			key=v.(string)
+		if k == "name" {
+			key = v.(string)
 		}
-		if k=="value"{
-			value=v.(string)
+		if k == "value" {
+			value = v.(string)
 		}
 	}
-	return  key,value
+	return key, value
 }
-
 
 //where 条件组装
 //func Where(names map[string]string) string{
@@ -136,54 +132,54 @@ func GetMapAttibutesKeyAndValue(data map[string]interface{})(key string,value st
 //	return sql+" )"
 //}
 
-func FindSourceIdByFromTables(table string,query map[string]string,fields []string, sortby []string, order []string,
-	page int64, page_size int64,category_ids string) (data  [] orm.Params) {
+func FindSourceIdByFromTables(table string, query map[string]string, fields []string, sortby []string, order []string,
+	page int64, page_size int64, category_ids string) (data []orm.Params) {
 	orm.Debug = true
 	o := orm.NewOrm()
-	sql :=""
-	if page !=0{
-		page=page-1
+	sql := ""
+	if page != 0 {
+		page = page - 1
 	}
-	page=page*page_size
+	page = page * page_size
 
 	//组装query 查询条件
 	var queryWhere string
 	if len(query) != 0 {
-		for k,v:= range query{
-			queryWhere += "and `"+k+"` = '"+v+"'"
+		for k, v := range query {
+			queryWhere += "and `" + k + "` = '" + v + "'"
 		}
 	}
 
-	var DataList [] orm.Params
+	var DataList []orm.Params
 
-	var SourceIdList [] orm.Params
+	var SourceIdList []orm.Params
 	var sourceIdsql string
 	var sourceIdsqlId string
 	//使用分类id先过滤一次
-	if category_ids !=""{
-		sql:="select DISTINCT source_id  from  relations where target_id in("+category_ids+")"
+	if category_ids != "" {
+		sql := "select DISTINCT source_id  from  relations where target_id in(" + category_ids + ")"
 
 		_, errs := o.Raw(sql).Values(&SourceIdList)
-		if errs == nil  {
+		if errs == nil {
 
 			for k, _ := range SourceIdList {
-				id:=GetMapValue("source_id",SourceIdList[k]).(string)
+				id := GetMapValue("source_id", SourceIdList[k]).(string)
 				//source_id, _ = strconv.ParseUint(id, 10, 64)
-				sourceIdsqlId +=id+","
+				sourceIdsqlId += id + ","
 			}
-			sourceIdsqlId=strings.TrimSuffix(sourceIdsqlId, ",")
-			sourceIdsql=" and id in("+sourceIdsqlId+")"
+			sourceIdsqlId = strings.TrimSuffix(sourceIdsqlId, ",")
+			sourceIdsql = " and id in(" + sourceIdsqlId + ")"
 
-		}else{
+		} else {
 			beego.Debug(errs)
 		}
 
 	}
 
-	sql ="select * from  "+table+"  where  1=1 "+queryWhere+" "+sourceIdsql+" order by created_time desc limit ?,? "
+	sql = "select * from  " + table + "  where  1=1 " + queryWhere + " " + sourceIdsql + " order by updated_time desc limit ?,? "
 
-	_, errs := o.Raw(sql,page,page_size).Values(&DataList)
-	if errs != nil  {
+	_, errs := o.Raw(sql, page, page_size).Values(&DataList)
+	if errs != nil {
 		beego.Debug(errs)
 		return data
 	}
@@ -192,57 +188,55 @@ func FindSourceIdByFromTables(table string,query map[string]string,fields []stri
 	return DataList
 }
 
-func CountSourceIdByFromTables(table string,query map[string]string, category_ids string) (count  int64) {
+func CountSourceIdByFromTables(table string, query map[string]string, category_ids string) (count int64) {
 	orm.Debug = true
 	o := orm.NewOrm()
 
-	var countNum [] orm.Params
-	var SourceIdList [] orm.Params
+	var countNum []orm.Params
+	var SourceIdList []orm.Params
 	var sourceIdsql string
 	var sourceIdsqlId string
 
 	//组装query 查询条件
 	var queryWhere string
 	if len(query) != 0 {
-		for k,v:= range query{
-			queryWhere += "and `"+k+"` = '"+v+"'"
+		for k, v := range query {
+			queryWhere += "and `" + k + "` = '" + v + "'"
 		}
 	}
 
-
 	//使用分类id先过滤一次
-	if category_ids !=""{
-		sql:="select DISTINCT source_id  from  relations where target_id in("+category_ids+")"
+	if category_ids != "" {
+		sql := "select DISTINCT source_id  from  relations where target_id in(" + category_ids + ")"
 
 		_, errs := o.Raw(sql).Values(&SourceIdList)
-		if errs == nil  {
+		if errs == nil {
 
 			for k, _ := range SourceIdList {
-				id:=GetMapValue("source_id",SourceIdList[k]).(string)
+				id := GetMapValue("source_id", SourceIdList[k]).(string)
 				//source_id, _ = strconv.ParseUint(id, 10, 64)
-				sourceIdsqlId +=id+","
+				sourceIdsqlId += id + ","
 			}
-			sourceIdsqlId=strings.TrimSuffix(sourceIdsqlId, ",")
-			sourceIdsql=" and id in("+sourceIdsqlId+")"
+			sourceIdsqlId = strings.TrimSuffix(sourceIdsqlId, ",")
+			sourceIdsql = " and id in(" + sourceIdsqlId + ")"
 
-		}else{
+		} else {
 			beego.Debug(errs)
 		}
 
 	}
 
-
-	sql :="select count(*) as count from  "+table+"  where  1=1 "+queryWhere+" " +sourceIdsql
+	sql := "select count(*) as count from  " + table + "  where  1=1 " + queryWhere + " " + sourceIdsql
 
 	_, errs := o.Raw(sql).Values(&countNum)
-	if errs != nil  {
+	if errs != nil {
 		beego.Debug(errs)
 		return count
 	}
 
-	counts :=GetMapValue("count",countNum[0]).(string)
+	counts := GetMapValue("count", countNum[0]).(string)
 	count, err := strconv.ParseInt(counts, 10, 64)
-	if err != nil  || count <=0 {
+	if err != nil || count <= 0 {
 		beego.Debug(err)
 		return count
 	}
@@ -252,46 +246,46 @@ func CountSourceIdByFromTables(table string,query map[string]string, category_id
 
 }
 
-func FindSourceIdByNameFromAttributes(table string,query map[string]string, names  map[string]string,fields []string, sortby []string, order []string,
-	page int64, page_size int64,category_ids string,types string) (data  [] orm.Params)  {
+func FindSourceIdByNameFromAttributes(table string, query map[string]string, names map[string]string, fields []string, sortby []string, order []string,
+	page int64, page_size int64, category_ids string, types string) (data []orm.Params) {
 
-	var i=0
+	var i = 0
 	orm.Debug = true
 	o := orm.NewOrm()
-	sql :=""
-	var SourceIdList [] orm.Params
+	sql := ""
+	var SourceIdList []orm.Params
 	var sourceIdsql string
 	var sourceIdsqlId string
 
-	if page !=0{
-		page=page-1
+	if page != 0 {
+		page = page - 1
 	}
-	page=page*page_size
+	page = page * page_size
 
 	//组装query 查询条件
 	var queryWhere string
 	if len(query) != 0 {
-		for k,v:= range query{
-			queryWhere += "and `"+k+"` = '"+v+"'"
+		for k, v := range query {
+			queryWhere += "and `" + k + "` = '" + v + "'"
 		}
 	}
 
 	//使用分类id先过滤一次
-	if category_ids !=""{
-		sql="select DISTINCT source_id  from  relations where target_id in("+category_ids+")"
+	if category_ids != "" {
+		sql = "select DISTINCT source_id  from  relations where target_id in(" + category_ids + ")"
 
 		_, errs := o.Raw(sql).Values(&SourceIdList)
-		if errs == nil  {
+		if errs == nil {
 
 			for k, _ := range SourceIdList {
-				id:=GetMapValue("source_id",SourceIdList[k]).(string)
+				id := GetMapValue("source_id", SourceIdList[k]).(string)
 				//source_id, _ = strconv.ParseUint(id, 10, 64)
-				sourceIdsqlId +=id+","
+				sourceIdsqlId += id + ","
 			}
-			sourceIdsqlId=strings.TrimSuffix(sourceIdsqlId, ",")
-			sourceIdsql=" and source_id in("+sourceIdsqlId+")"
+			sourceIdsqlId = strings.TrimSuffix(sourceIdsqlId, ",")
+			sourceIdsql = " and source_id in(" + sourceIdsqlId + ")"
 
-		}else{
+		} else {
 			beego.Debug(errs)
 		}
 
@@ -299,54 +293,53 @@ func FindSourceIdByNameFromAttributes(table string,query map[string]string, name
 
 	for k, v := range names {
 
-		if types !=""{
-			types=" and `type`='"+types+"'"
+		if types != "" {
+			types = " and `type`='" + types + "'"
 		}
 		//第一次
-		if(i==0 ||  0>=len(SourceIdList)){
+		if i == 0 || 0 >= len(SourceIdList) {
 
-			sql ="select DISTINCT source_id from  attributes  force index(type_name_source_id)  " +
-				"where 1=1 "+types+"  and "+"  ( name="+k+" and value="+v+" ) " +sourceIdsql
+			sql = "select DISTINCT source_id from  attributes  force index(type_name_source_id)  " +
+				"where 1=1 " + types + "  and " + "  ( name=" + k + " and value=" + v + " ) " + sourceIdsql
 
-		}else{ //二次查询
+		} else { //二次查询
 			//	var source_id uint64
 			var sourceId string
 			for k, _ := range SourceIdList {
-				id:=GetMapValue("source_id",SourceIdList[k]).(string)
+				id := GetMapValue("source_id", SourceIdList[k]).(string)
 				//source_id, _ = strconv.ParseUint(id, 10, 64)
-				sourceId +=id+","
+				sourceId += id + ","
 			}
-			sourceId=strings.TrimSuffix(sourceId, ",")
+			sourceId = strings.TrimSuffix(sourceId, ",")
 
-			sql ="select DISTINCT source_id from  attributes  force index(type_name_source_id)  " +
-				"where 1=1 "+types+"  and "+"  ( name="+k+" and value="+v+" ) " +" and source_id in("+sourceId+")" +sourceIdsql
+			sql = "select DISTINCT source_id from  attributes  force index(type_name_source_id)  " +
+				"where 1=1 " + types + "  and " + "  ( name=" + k + " and value=" + v + " ) " + " and source_id in(" + sourceId + ")" + sourceIdsql
 		}
 		//获取配置列表数据
 
 		_, errs := o.Raw(sql).Values(&SourceIdList)
-		if errs != nil  {
+		if errs != nil {
 			beego.Debug(errs)
 			return data
 		}
-
 
 		i++
 	}
 
 	beego.Debug(SourceIdList)
 	var sourceId string
-	var DataList [] orm.Params
+	var DataList []orm.Params
 
 	for k, _ := range SourceIdList {
-		id:=GetMapValue("source_id",SourceIdList[k]).(string)
+		id := GetMapValue("source_id", SourceIdList[k]).(string)
 		//source_id, _ = strconv.ParseUint(id, 10, 64)
-		sourceId +=id+","
+		sourceId += id + ","
 	}
-	sourceId=strings.TrimSuffix(sourceId, ",")
-	sql ="select * from  "+table+"   where  1=1 "+queryWhere+" and id in("+sourceId+")  order by created_time desc limit ?,?"
+	sourceId = strings.TrimSuffix(sourceId, ",")
+	sql = "select * from  " + table + "   where  1=1 " + queryWhere + " and id in(" + sourceId + ")  order by updated_time desc limit ?,?"
 	beego.Debug(sql)
-	_, errs := o.Raw(sql,page,page_size).Values(&DataList)
-	if errs != nil  {
+	_, errs := o.Raw(sql, page, page_size).Values(&DataList)
+	if errs != nil {
 		beego.Debug(errs)
 		return data
 	}
@@ -355,75 +348,74 @@ func FindSourceIdByNameFromAttributes(table string,query map[string]string, name
 	return DataList
 }
 
-func CountSourceIdByNameFromAttributes(table string,query map[string]string, names  map[string]string,category_ids string,types string) (counts  int64) {
-	var i=0
+func CountSourceIdByNameFromAttributes(table string, query map[string]string, names map[string]string, category_ids string, types string) (counts int64) {
+	var i = 0
 	orm.Debug = true
 	o := orm.NewOrm()
 	//sqlCount :=""
-	sql :=""
-	var SourceIdList [] orm.Params
+	sql := ""
+	var SourceIdList []orm.Params
 	var sourceIdsql string
 	var sourceIdsqlId string
 
 	//组装query 查询条件
 	var queryWhere string
 	if len(query) != 0 {
-		for k,v:= range query{
-			queryWhere += "and `"+k+"` = '"+v+"'"
+		for k, v := range query {
+			queryWhere += "and `" + k + "` = '" + v + "'"
 		}
 	}
 
-
 	//使用分类id先过滤一次
-	if category_ids !=""{
-		sql="select DISTINCT source_id  from  relations where target_id in("+category_ids+")"
+	if category_ids != "" {
+		sql = "select DISTINCT source_id  from  relations where target_id in(" + category_ids + ")"
 
 		_, errs := o.Raw(sql).Values(&SourceIdList)
-		if errs == nil  {
+		if errs == nil {
 
 			for k, _ := range SourceIdList {
-				id:=GetMapValue("source_id",SourceIdList[k]).(string)
+				id := GetMapValue("source_id", SourceIdList[k]).(string)
 				//source_id, _ = strconv.ParseUint(id, 10, 64)
-				sourceIdsqlId +=id+","
+				sourceIdsqlId += id + ","
 			}
-			sourceIdsqlId=strings.TrimSuffix(sourceIdsqlId, ",")
-			sourceIdsql=" and source_id in("+sourceIdsqlId+")"
+			sourceIdsqlId = strings.TrimSuffix(sourceIdsqlId, ",")
+			sourceIdsql = " and source_id in(" + sourceIdsqlId + ")"
 
-		}else{
+		} else {
 			beego.Debug(errs)
 		}
 
 	}
 	for k, v := range names {
-		if types !=""{
-			types=" and type='"+types+"'"
+		if types != "" {
+			types = " and type='" + types + "'"
 		}
 
 		//第一次
-		if(i==0 ){
+		if i == 0 {
 
-			sql ="select DISTINCT source_id from  attributes  force index(type_name_source_id)  " +
-				"where 1=1 "+types+" "+" and ( name="+k+" and value="+v+" ) " + sourceIdsql
+			sql = "select DISTINCT source_id from  attributes  force index(type_name_source_id)  " +
+				"where 1=1 " + types + " " + " and ( name=" + k + " and value=" + v + " ) " + sourceIdsql
 
-		}else{ //二次查询
+		} else { //二次查询
 			//	var source_id uint64
 			var sourceId string
 			for k, _ := range SourceIdList {
-				id:=GetMapValue("source_id",SourceIdList[k]).(string)
+				id := GetMapValue("source_id", SourceIdList[k]).(string)
 				//source_id, _ = strconv.ParseUint(id, 10, 64)
-				sourceId +=id+","
+				sourceId += id + ","
 			}
-			sourceId=strings.TrimSuffix(sourceId, ",")
+			sourceId = strings.TrimSuffix(sourceId, ",")
 
-			sql ="select DISTINCT source_id from  attributes  force index(type_name_source_id)  " +
-				"where 1=1 "+types+"  and "+"  ( name="+k+" and value="+v+" ) " +" and source_id in("+sourceId+")"+ sourceIdsql
+			sql = "select DISTINCT source_id from  attributes  force index(type_name_source_id)  " +
+				"where 1=1 " + types + "  and " + "  ( name=" + k + " and value=" + v + " ) " + " and source_id in(" + sourceId + ")" + sourceIdsql
 			beego.Debug("in find")
 			beego.Debug(sql)
 		}
 		//获取配置列表数据
 
 		_, errs := o.Raw(sql).Values(&SourceIdList)
-		if errs != nil  {
+		if errs != nil {
 			beego.Debug(errs)
 			return counts
 		}
@@ -432,28 +424,27 @@ func CountSourceIdByNameFromAttributes(table string,query map[string]string, nam
 		i++
 	}
 
-
 	var sourceId string
-	var countNum [] orm.Params
+	var countNum []orm.Params
 
 	for k, _ := range SourceIdList {
-		id:=GetMapValue("source_id",SourceIdList[k]).(string)
+		id := GetMapValue("source_id", SourceIdList[k]).(string)
 		//source_id, _ = strconv.ParseUint(id, 10, 64)
-		sourceId +=id+","
+		sourceId += id + ","
 	}
-	sourceId=strings.TrimSuffix(sourceId, ",")
-	sql ="select count(DISTINCT id) as count from     "+table +
-		" where  1=1 "+queryWhere+" and id in("+sourceId+") "
+	sourceId = strings.TrimSuffix(sourceId, ",")
+	sql = "select count(DISTINCT id) as count from     " + table +
+		" where  1=1 " + queryWhere + " and id in(" + sourceId + ") "
 
 	_, errs := o.Raw(sql).Values(&countNum)
-	if errs != nil  {
+	if errs != nil {
 		beego.Debug(errs)
 		return counts
 	}
 
-	count :=GetMapValue("count",countNum[0]).(string)
+	count := GetMapValue("count", countNum[0]).(string)
 	counts, err := strconv.ParseInt(count, 10, 64)
-	if err != nil  || counts <=0 {
+	if err != nil || counts <= 0 {
 		beego.Debug(err)
 		return counts
 	}
