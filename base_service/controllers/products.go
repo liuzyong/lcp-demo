@@ -60,7 +60,12 @@ func (c *ProductsController) GetAll() {
 
 	if v := c.GetString("type"); v != "" {
 		types = v
+	}else{
+		// c.Data["json"] = models.MessageErrorUint64(0, "查询失败,type不能为空")
+		// c.ServeJSON()
+		// return
 	}
+
 
 	// fields: col1,col2,entity.col3
 	if v := c.GetString("fields"); v != "" {
