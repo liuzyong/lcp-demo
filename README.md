@@ -21,7 +21,7 @@
 
 - 10月8日：发布 1.0 正式版
 - 10月30日：发布 1.0 配套文档
-- 11月30日： docker商店(可通过docker商店一键安装uniappadmin)
+- 11月30日： 发布docker商店(可通过docker商店一键安装uniappadmin)
 
 
 ## 特点
@@ -49,11 +49,8 @@
 - [🔥UniappAdmin]http://demo.uniappadmin.cn:5204/)
 账户：
 密码：
-## 🍳 UniappAdmin
+## 🍳 UniappAdmin 演示图
 
-
-
-- [sula-cooker](https://cook.sula.now.sh)
 
 <div>
   <img src="https://file.9pigfly.com/demo.png" width="49%"/>
@@ -69,8 +66,9 @@
 ## 📦 以下是需要对UniappAdmin 二次开发才需要看的
 
 UniappAdmin  技术栈：
-Go 语言  用于开发微服务化的API服务、如单据服务API、产品服务API、配置服务API
-Ｒeact  用于开发总后台及可视化编辑器
+
+- Go 语言  用于开发微服务化的API服务、如单据服务API、产品服务API、配置服务API
+- React 语言 用于开发总后台及可视化编辑器
 
 下载 master 分支代码
 ```bash
@@ -107,7 +105,7 @@ npm start
 - [x] 微服务化API 
 - [x] 可视化编辑器
 - [x] 商业化案例
-- [x] 生产环境测试
+- [x] 生产环境测试 
 
 ## 📋 待完成
 
