@@ -9,7 +9,6 @@ import { Config } from "../../../config/Config";
 
 
 
-
 export default class Appdetail extends React.Component<any, any> {
   render() {
     return (

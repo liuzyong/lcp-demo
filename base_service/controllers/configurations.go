@@ -88,9 +88,14 @@ func (c *ConfigurationsController) GetOne() {
 	beego.Debug("GetOne")
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseUint(idStr, 10, 64)
-	v := models.GetConfigurationsById(id)
+	if c.Method == "fast" {
+		v := models.GetConfigurationsByIdFast(id)
+		c.Data["json"] = v
+	} else {
+		v := models.GetConfigurationsById(id)
+		c.Data["json"] = v
+	}
 
-	c.Data["json"] = v
 	c.ServeJSON()
 	return
 }
@@ -196,7 +201,6 @@ func (c *ConfigurationsController) GetAll() {
 	return
 }
 
-
 // Put ...
 // @Title Put
 // @Description update the Configurations
@@ -209,7 +213,6 @@ func (c *ConfigurationsController) Put() {
 	beego.Debug("Put")
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseUint(idStr, 10, 64)
-
 
 	if c.Method == "fast" {
 		var data map[string]interface{}

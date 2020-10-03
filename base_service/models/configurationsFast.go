@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
@@ -142,51 +143,87 @@ func GetAllConfigurationsFast(types string, query map[string]string, names map[s
 	return MessageSucessMap(returnData, "获取配置列表成功")
 }
 
-
 //更新配置
 // UpdateConfigurations updates Configurations by Id and returns error if
 // the record to be updated doesn't exist
-func UpdateConfigurationsByIdFast(configuration map[string]interface{},id uint64) (map[string]interface{}) {
+func UpdateConfigurationsByIdFast(configuration map[string]interface{}, id uint64) map[string]interface{} {
 
 	orm.Debug = true
 	o := orm.NewOrm()
-	var maps [] orm.Params
-	num,err := o.Raw("select * from  configurations where id=?",id).Values(&maps)
-	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorUint64(id,"配置不存在")
+	var maps []orm.Params
+	num, err := o.Raw("select * from  configurations where id=?", id).Values(&maps)
+	if err != nil || num <= 0 { //处理err
+		return MessageErrorUint64(id, "配置不存在")
 	}
 
-	sql:="UPDATE  `configurations` SET `updated_time`=? " +
+	sql := "UPDATE  `configurations` SET `updated_time`=? " +
 		"WHERE (`id`=?);"
 
-	res, err := o.Raw(sql,time.Now(),id).Exec()
+	res, err := o.Raw(sql, time.Now(), id).Exec()
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorUint64(id,"修改配置失败")
+		return MessageErrorUint64(id, "修改配置失败")
 	}
 
-	var  attribute Attribute
+	var attribute Attribute
 	for key, value := range configuration {
 
-		attribute.SourceId=id
-		attribute.Name=key
-		attribute.Value=value.(string)
-		attribute.Format=getDataType(value)
-		if attribute.Name=="type"{
+		attribute.SourceId = id
+		attribute.Name = key
+		attribute.Value = value.(string)
+		attribute.Format = getDataType(value)
+		if attribute.Name == "type" {
 			continue
 		}
-		attributeData,errs := GetAttributesByName(id,key,"configuration")
+		attributeData, errs := GetAttributesByName(id, key, "configuration")
 		beego.Debug(attributeData)
 		beego.Debug(errs)
-		if errs == nil {        //修改
-			UpdateAttributes(&attribute,id)
-		}else{//添加
-			AddAttributes(&attribute,id,"configuration")
+		if errs == nil { //修改
+			UpdateAttributes(&attribute, id)
+		} else { //添加
+			AddAttributes(&attribute, id, "configuration")
 		}
 	}
 
 	//如果配置存在则更新
 
-	return  MessageSucessUint64(id,"修改配置成功")
+	return MessageSucessUint64(id, "修改配置成功")
+}
+
+func GetConfigurationsByIdFast(id uint64) (data map[string]interface{}) {
+	orm.Debug = true
+	o := orm.NewOrm()
+	var maps []orm.Params
+	num, err := o.Raw("select * from  configurations where id=?", id).Values(&maps)
+	if err != nil || num <= 0 { //处理err
+		return MessageErrorMap(data, "获取单条配置失败,请检查传入id参数")
+	}
+
+	attributes, errs := GetAttributes(id)
+	if errs != nil { //处理err
+		return MessageErrorMap(data, "获取单条配置失败")
+	}
+
+	returnData := make(map[string]interface{})
+	for i := 0; i < len(attributes); i++ {
+		//var data map[string]string
+		key, value := GetMapAttibutesKeyAndValue(attributes[i])
+		beego.Debug(key)
+		beego.Debug(value)
+		//data[key]=value
+		fmt.Printf("v1 type:%T\n", key)
+		fmt.Printf("v2 type:%T\n", value)
+		returnData[key] = value
+
+	}
+	returnData["id"] = uint64ToString(id)
+	types := GetMapValue("type", maps[0]).(string)
+	created_time := GetMapValue("created_time", maps[0]).(string)
+	updated_time := GetMapValue("updated_time", maps[0]).(string)
+	returnData["type"] = types
+	returnData["created_time"] = created_time
+	returnData["updated_time"] = updated_time
+
+	return MessageSucessMap(returnData, "获取单条配置成功")
 }
