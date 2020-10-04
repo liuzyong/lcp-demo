@@ -2,6 +2,8 @@ data/cache
 src/.umi/
 .idea/
 .history/
+adminEditor/node_modules
+admin/node_modules
 npm-debug.log
 yarn-error.log
 yarn.lock
