@@ -1,7 +1,7 @@
-
+﻿
 DROP TABLE IF EXISTS `attributes`;
 CREATE TABLE `attributes` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) unsigned NOT NULL,
   `source_id` bigint(20) unsigned NOT NULL COMMENT '目标id',
   `type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '自定义字段',
@@ -19,7 +19,7 @@ CREATE TABLE `attributes` (
   `updated_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `type_name_source_id` (`type`,`name`,`source_id`) USING BTREE COMMENT 'source_id_key_language'
-) ENGINE=InnoDB AUTO_INCREMENT=100351297529577473 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 DROP TABLE IF EXISTS `authorizations`;
@@ -108,12 +108,12 @@ CREATE TABLE `prices` (
 
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL,
   `type` varchar(255) DEFAULT NULL,
   `created_time` timestamp NULL DEFAULT NULL,
   `updated_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=98521305891995649 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 DROP TABLE IF EXISTS `relations`;
