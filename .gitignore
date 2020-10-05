@@ -4,6 +4,7 @@ src/.umi/
 .history/
 adminEditor/node_modules
 admin/node_modules
+package-lock.json
 npm-debug.log
 yarn-error.log
 yarn.lock
