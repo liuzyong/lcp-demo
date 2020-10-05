@@ -85,6 +85,12 @@ go build  ./base_service/main.go
 ./base_service.exe (windows)
 ./base_service_liunx (liunx)
 ```
+## 导入数据库 并配置
+```
+sql 文件路径：/uniappadmin/base_service/conf/uniappadmin.sql
+配置文件路径: /uniappadmin/base_service/conf/app.conf
+```
+
 ## 🔨 启动总后台
 
 ```js
