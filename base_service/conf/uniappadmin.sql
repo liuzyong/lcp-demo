@@ -1,23 +1,4 @@
-/*
-Navicat MySQL Data Transfer
 
-Source Server         : 39.105.197.166
-Source Server Version : 50621
-Source Host           : 39.105.197.166:3306
-Source Database       : offshorewindata
-
-Target Server Type    : MYSQL
-Target Server Version : 50621
-File Encoding         : 65001
-
-Date: 2020-10-05 19:23:00
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------
--- Table structure for attributes
--- ----------------------------
 DROP TABLE IF EXISTS `attributes`;
 CREATE TABLE `attributes` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -40,9 +21,7 @@ CREATE TABLE `attributes` (
   UNIQUE KEY `type_name_source_id` (`type`,`name`,`source_id`) USING BTREE COMMENT 'source_id_key_language'
 ) ENGINE=InnoDB AUTO_INCREMENT=100351297529577473 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Table structure for authorizations
--- ----------------------------
+
 DROP TABLE IF EXISTS `authorizations`;
 CREATE TABLE `authorizations` (
   `id` bigint(11) NOT NULL,
@@ -55,9 +34,7 @@ CREATE TABLE `authorizations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------
--- Table structure for categories
--- ----------------------------
+
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` bigint(20) unsigned NOT NULL COMMENT 'id',
@@ -72,9 +49,7 @@ CREATE TABLE `categories` (
   KEY `categories_type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Table structure for configurations
--- ----------------------------
+
 DROP TABLE IF EXISTS `configurations`;
 CREATE TABLE `configurations` (
   `id` bigint(20) DEFAULT NULL,
@@ -83,9 +58,7 @@ CREATE TABLE `configurations` (
   `updated_time` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------
--- Table structure for files
--- ----------------------------
+
 DROP TABLE IF EXISTS `files`;
 CREATE TABLE `files` (
   `id` bigint(20) NOT NULL,
@@ -95,9 +68,7 @@ CREATE TABLE `files` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------
--- Table structure for orders
--- ----------------------------
+
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `id` bigint(20) DEFAULT NULL,
@@ -108,9 +79,7 @@ CREATE TABLE `orders` (
   `updated_time` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------
--- Table structure for pay
--- ----------------------------
+
 DROP TABLE IF EXISTS `pay`;
 CREATE TABLE `pay` (
   `id` bigint(20) NOT NULL,
@@ -120,9 +89,7 @@ CREATE TABLE `pay` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------
--- Table structure for prices
--- ----------------------------
+
 DROP TABLE IF EXISTS `prices`;
 CREATE TABLE `prices` (
   `id` bigint(20) unsigned NOT NULL,
@@ -138,9 +105,7 @@ CREATE TABLE `prices` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Table structure for products
--- ----------------------------
+
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -150,9 +115,7 @@ CREATE TABLE `products` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=98521305891995649 DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------
--- Table structure for relations
--- ----------------------------
+
 DROP TABLE IF EXISTS `relations`;
 CREATE TABLE `relations` (
   `id` bigint(20) DEFAULT NULL,
@@ -164,9 +127,7 @@ CREATE TABLE `relations` (
   UNIQUE KEY `type_source_id_target_id` (`type`,`source_id`,`target_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------
--- Table structure for specifications
--- ----------------------------
+
 DROP TABLE IF EXISTS `specifications`;
 CREATE TABLE `specifications` (
   `id` bigint(20) unsigned NOT NULL,
@@ -177,9 +138,7 @@ CREATE TABLE `specifications` (
   KEY `index_product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ----------------------------
--- Table structure for users
--- ----------------------------
+
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` bigint(20) NOT NULL,
