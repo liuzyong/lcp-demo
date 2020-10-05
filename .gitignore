@@ -8,3 +8,4 @@ package-lock.json
 npm-debug.log
 yarn-error.log
 yarn.lock
+base_service/conf/app_conf
