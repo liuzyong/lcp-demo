@@ -55,14 +55,14 @@ export default inject('store')(
                         
                         {user_type=="designer" ? (
                              <div className="hidden-xs p-t-sm pull-right">
-                             <Button size="sm" className="m-r-xs" level="success"  disabledTip="Todo...">
+                             {/* <Button size="sm" className="m-r-xs" level="success"  disabledTip="Todo...">
                                  应用配置
                              </Button>
                              <Button size="sm" className="m-r-xs" level="error"  disabledTip="Todo...">
                                  页面管理
-                             </Button>
+                             </Button> */}
                              <Button size="sm" level="info" onClick={() => store.setAddPageIsOpen(true)}>
-                                 快速新增页面
+                                 新增页面
                              </Button> 
                              </div>
                         ) : null}

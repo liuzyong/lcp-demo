@@ -3,7 +3,7 @@ import {schema2component} from './AMISRenderer';
 export default schema2component(
     {
         type: 'dialog',
-        title: '新增页面--更好导航与路径请在右上角点击页面管理设置',
+        title: '新增页面--编辑页面请到总后台设置',
         body: {
             type: 'form',
             controls: [
