@@ -17,15 +17,15 @@ let STATIC_FILE_ADDRESS = "";
 
 var domian=getDomian();
 if (BASE_SERVICE_ADDRESS == "") {
-    BASE_SERVICE_ADDRESS=domian+":5212/v1/"
+    BASE_SERVICE_ADDRESS=domian+":5012/v1/"
 }
 
 if (STATIC_FILE_ADDRESS == "") {
-    STATIC_FILE_ADDRESS=domian+":5212"
+    STATIC_FILE_ADDRESS=domian+":5012"
 }
 
 if (BASE_SERVICE_ADDRESS == "") {
-    BASE_SERVICE_ADDRESS=domian+":5212/v1/"
+    BASE_SERVICE_ADDRESS=domian+":5012/v1/"
 }
 if (ADMIN_ADDRESS == "") {
     ADMIN_ADDRESS=domian+":5207"
