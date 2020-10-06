@@ -230,3 +230,12 @@ http://www.uniappadmin.cn/support.html
 <div>
   <img src="https://file.9pigfly.com/demo5.png" width="300" />
 </div>
+
+
+## 团队招募
+
+1、招募有识之士，一起加入开发应用市场,共享市场红利。
+
+2、团队总人数为10人,招完即止。
+
+3、入团队门槛（需先支付3000元保证金,该保证金在项目完全开发完成后才可退回）
