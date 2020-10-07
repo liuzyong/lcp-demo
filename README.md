@@ -125,16 +125,19 @@
 ###  总平台（总后台）   
 
 - [🔥UniappAdmin](http://demo.uniappadmin.cn:5207)http://demo.uniappadmin.cn:5207
+
 账户：admin
 密码：admin
 
 ###  🔥UniappAdmin 设计人员端（产品经理/设计人员/开发者）
 - [🔥UniappAdmin](http://demo.uniappadmin.cn:5204/?app_id=95624659617185792)http://demo.uniappadmin.cn:5204/?app_id=95624659617185792
+
 账户：uniappadmin
 密码： uniappadmin
 
 ###  🔥UniappAdmin 普通用户端
 - [🔥UniappAdmin](http://demo.uniappadmin.cn:5204/?app_id=95624659617185792)http://demo.uniappadmin.cn:5204/?app_id=95624659617185792
+
 账户： 会员
 密码： 123456
 ## 🍳 UniappAdmin 演示图
