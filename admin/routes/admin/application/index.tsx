@@ -70,7 +70,7 @@ const schema = {
             "type": "crud",
             "api": {
                 "method": "post",
-                "url":  Config.PRODUCT_ADDRESS+"?query=type:app&page=1&perPage=12",
+                "url":  Config.PRODUCT_ADDRESS+"?query=type:app&perPage=12",
                 "requestAdaptor": "api.method = \"get\"\r\nif (api.data.keywords && api.data.keywords != undefined) {\r\n    api.data.names = \"'\" + \"app_name\" + \"'\" + \":\" + \"'\" + api.data.keywords + \"'\"\r\n}\r\nreturn api;"
             },
             "defaultParams": {
