@@ -219,11 +219,12 @@ http://www.uniappadmin.cn/support.html
 
 
 
-## 加入VIP一对一技术支持
-申请需要备注提供支付金额，及支付人姓名 
+## 加技术，拉进交流及技术支持群（免费）
 <div>
   <img src="https://file.9pigfly.com/demo4.png" width="300" />
 </div>
+
+
 
 
 ## 捐献及支付服务费 支付宝收款码
