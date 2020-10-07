@@ -219,7 +219,7 @@ http://www.uniappadmin.cn/support.html
 
 
 
-## 加技术，拉进交流及技术支持群（免费）
+## 加微信技术，拉进交流及技术支持群（免费）
 <div>
   <img src="https://file.9pigfly.com/demo4.png" width="300" />
 </div>
