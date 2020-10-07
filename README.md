@@ -129,12 +129,12 @@
 密码：admin
 
 ###  🔥UniappAdmin 设计人员端（产品经理/设计人员/开发者）
-- [🔥UniappAdmin](http://demo.uniappadmin.cn:5204/)
+- [🔥UniappAdmin](http://demo.uniappadmin.cn:5204/?app_id=91991921001496576#/login)
 账户：uniappadmin
 密码： uniappadmin
 
 ###  🔥UniappAdmin 普通用户端
-- [🔥UniappAdmin]http://demo.uniappadmin.cn:5204/)
+- [🔥UniappAdmin]http://demo.uniappadmin.cn:5204/?app_id=91991921001496576#/login)
 账户： 在总后台创建,用户角色为普通用户
 密码： 在总后台创建,用户角色为普通用户
 ## 🍳 UniappAdmin 演示图
