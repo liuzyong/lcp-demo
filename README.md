@@ -219,9 +219,9 @@ npm start
 
 
 
-## 加微信，发送uniappadmin，系统自动拉进Uniappadmin技术交流群（免费）
+## Uniappadmin技术交流群
 <div>
-  <img src="https://file.9pigfly.com/demo4.png" width="300" />
+  <img src="https://file.9pigfly.com/uniappadmin_weixin.png" width="300" />
 </div>
 
 
