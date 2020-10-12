@@ -11,11 +11,18 @@ import (
 
 // CategoriesController operations for Categories
 type CategoriesController struct {
-	beego.Controller
+	baseController
 }
 
 // URLMapping ...
 func (c *CategoriesController) URLMapping() {
+	beego.Debug("URLMapping")
+	beego.Debug(c.Ctx.Input.Param(":method"))
+	if c.Ctx.Input.Param(":method") == GetFast() {
+		c.Method = "agility"
+	} else {
+		c.Method = "fast"
+	}
 	c.Mapping("Post", c.Post)
 	c.Mapping("GetOne", c.GetOne)
 	c.Mapping("GetAll", c.GetAll)
@@ -38,14 +45,33 @@ func (c *CategoriesController) Post() {
 
 
 	beego.Debug("Post")
-	//var d models.Categorie
-	var Categorie  models.CategoriesData
-	 err := json.Unmarshal(c.Ctx.Input.RequestBody, &Categorie)
-	if err == nil {
-		c.Data["json"]  = models.AddCategories(&Categorie)
+	if c.Method == "fast" {
+		//快速开发模式
+
+		var data map[string]interface{}
+		err := json.Unmarshal(c.Ctx.Input.RequestBody, &data)
+		if err == nil {
+			types := models.GetMapValue("type", data)
+			if types == "" {
+				c.Data["json"] = models.MessageErrorUint64(0, "添加失败,type不能为空")
+			} else {
+
+				c.Data["json"] = models.AddCategoriesFast(data, types.(string))
+			}
+		} else {
+			c.Data["json"] = models.MessageErrorUint64(0, err.Error())
+		}
 	}else{
-		c.Data["json"] =models.MessageErrorUint64(0,err.Error())
+		//var d models.Categorie
+		var Categorie  models.CategoriesData
+		err := json.Unmarshal(c.Ctx.Input.RequestBody, &Categorie)
+		if err == nil {
+			c.Data["json"]  = models.AddCategories(&Categorie)
+		}else{
+			c.Data["json"] =models.MessageErrorUint64(0,err.Error())
+		}
 	}
+
 	c.ServeJSON()
 	return
 
