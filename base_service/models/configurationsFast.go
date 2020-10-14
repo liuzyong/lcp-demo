@@ -153,7 +153,7 @@ func UpdateConfigurationsByIdFast(configuration map[string]interface{}, id uint6
 	var maps []orm.Params
 	num, err := o.Raw("select * from  configurations where id=?", id).Values(&maps)
 	if err != nil || num <= 0 { //处理err
-		return MessageErrorUint64(id, "配置不存在")
+		return MessageErrorUint64(id, "数据不存在")
 	}
 
 	sql := "UPDATE  `configurations` SET `updated_time`=? " +
@@ -163,7 +163,7 @@ func UpdateConfigurationsByIdFast(configuration map[string]interface{}, id uint6
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return MessageErrorUint64(id, "修改配置失败")
+		return MessageErrorUint64(id, "修改失败")
 	}
 
 	var attribute Attribute
@@ -188,7 +188,7 @@ func UpdateConfigurationsByIdFast(configuration map[string]interface{}, id uint6
 
 	//如果配置存在则更新
 
-	return MessageSucessUint64(id, "修改配置成功")
+	return MessageSucessUint64(id, "修改成功")
 }
 
 func GetConfigurationsByIdFast(id uint64) (data map[string]interface{}) {
@@ -197,12 +197,12 @@ func GetConfigurationsByIdFast(id uint64) (data map[string]interface{}) {
 	var maps []orm.Params
 	num, err := o.Raw("select * from  configurations where id=?", id).Values(&maps)
 	if err != nil || num <= 0 { //处理err
-		return MessageErrorMap(data, "获取单条配置失败,请检查传入id参数")
+		return MessageErrorMap(data, "获取数据失败,请检查传入id参数")
 	}
 
 	attributes, errs := GetAttributes(id)
 	if errs != nil { //处理err
-		return MessageErrorMap(data, "获取单条配置失败")
+		return MessageErrorMap(data, "获取数据失败")
 	}
 
 	returnData := make(map[string]interface{})
@@ -225,5 +225,5 @@ func GetConfigurationsByIdFast(id uint64) (data map[string]interface{}) {
 	returnData["created_time"] = created_time
 	returnData["updated_time"] = updated_time
 
-	return MessageSucessMap(returnData, "获取单条配置成功")
+	return MessageSucessMap(returnData, "获取成功")
 }

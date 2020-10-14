@@ -46,13 +46,44 @@ type Attribute struct {
 	v6       string `json:"v6"`
 }
 
+
+func InsertAttributesToDb(data map[string]interface{},id uint64,deleteMap map[string]interface{}){
+	var  attribute Attribute
+	beego.Debug("InsertAttributesToDb-data",data)
+	for key, value := range data {
+
+		attribute.SourceId=id
+		attribute.Name=key
+		attribute.Language = "zh_CN"
+		attribute.Value=ToString(value)
+		attribute.Format=getDataType(value)
+		if HandleDeleteMap(key,deleteMap) ==true{
+			beego.Debug("deleteMap-"+key)
+			continue
+		}
+		//UpdateAttributes(&attribute,id)
+		AddAttributes(&attribute,id,"category")
+	}
+}
+
+func HandleDeleteMap(name string ,deleteMap map[string]interface{}) bool{
+
+	for k,_ :=range  deleteMap{
+		if name==k {
+			return true
+		}
+	}
+	return false
+}
+
+
 func AddAttributes(attribute *Attribute, SourceId uint64, Type string) bool {
 	id := SnowflakeId()
 	o := orm.NewOrm()
 	sql := "INSERT INTO `attributes` (`id`, `source_id`,`type`, `name`, `language`, `remark`, `value`, `format`,  `created_time`, `updated_time`) " +
 		"VALUES (?, ?,?, ?, ?, ?, ?, ?, ?, ?);"
 
-	_, err := o.Raw(sql, id, SourceId, Type, attribute.Name, "zh_CN", attribute.Remark, attribute.Value, attribute.Format, time.Now(), time.Now()).Exec()
+	_, err := o.Raw(sql, id, SourceId, Type, attribute.Name, attribute.Language,attribute.Remark, attribute.Value, attribute.Format, time.Now(), time.Now()).Exec()
 	if err != nil {
 
 		return false
@@ -60,6 +91,32 @@ func AddAttributes(attribute *Attribute, SourceId uint64, Type string) bool {
 	return true
 }
 
+
+func UpdateAttributesToDb(data map[string]interface{},id uint64,deleteMap map[string]interface{}){
+	var attribute Attribute
+	beego.Debug("UpdateAttributesToDb-data",data)
+
+	for key, value := range data {
+
+		attribute.SourceId = id
+		attribute.Name = key
+		attribute.Language = "zh_CN"
+		attribute.Value =ToString(value)
+		attribute.Format = getDataType(value)
+		if(HandleDeleteMap(attribute.Name,deleteMap) ==true){
+			continue
+		}
+		attributeData, errs := GetAttributesByName(id, key, "category")
+		beego.Debug(attributeData)
+		beego.Debug(errs)
+		if errs == nil { //修改
+			UpdateAttributes(&attribute, id)
+		} else { //添加
+			AddAttributes(&attribute, id, "category")
+		}
+	}
+
+}
 func UpdateAttributes(c *Attribute, SourceId uint64) bool {
 	orm.Debug = true
 	o := orm.NewOrm()

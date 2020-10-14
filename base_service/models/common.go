@@ -1,8 +1,10 @@
 package models
 
 import (
+	"fmt"
 	"github.com/GUAIK-ORG/go-snowflake/snowflake"
 	"github.com/astaxie/beego"
+	"reflect"
 	"strconv"
 )
 
@@ -89,4 +91,29 @@ func getDataType(i interface{}) string {  //函数t有一个参数i
 		return "int"
 	}
 	return "string"
+}
+
+//校验
+
+
+//任意类型转成string 类型
+func ToString(s interface{}) string{
+	beego.Debug(s)
+	fmt.Println(reflect.TypeOf(s))
+	switch s.(type) { //多选语句switch
+	case int:
+		 string := strconv.Itoa(s.(int))
+		return string
+	case int64:
+		string := strconv.FormatInt(s.(int64),10)
+		return string
+	case float64:
+		string := strconv.FormatFloat(s.(float64), 'E', -1, 64)
+		return string
+	case float32:
+		string :=strconv.FormatFloat(float64(s.(float32)), 'f', 6, 64)
+		return string
+	}
+
+	 return s.(string)
 }

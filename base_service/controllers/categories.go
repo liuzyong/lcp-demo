@@ -32,7 +32,13 @@ func (c *CategoriesController) URLMapping() {
 
 
 
-
+type CategoriesPost struct {
+	Id     int
+	Type   string `valid:"Required;"` 
+	ParentId    int    `valid:"Required;"`
+	Level  string `valid:"Required;"` 
+	Path string `valid:"Required;"`
+}
 
 // Post ...
 // @Title Post
@@ -51,13 +57,38 @@ func (c *CategoriesController) Post() {
 		var data map[string]interface{}
 		err := json.Unmarshal(c.Ctx.Input.RequestBody, &data)
 		if err == nil {
+			//验证代码
+
 			types := models.GetMapValue("type", data)
+			parent_id := models.GetMapValue("parent_id", data)
+			level := models.GetMapValue("level", data)
+			path := models.GetMapValue("path", data)
 			if types == "" {
 				c.Data["json"] = models.MessageErrorUint64(0, "添加失败,type不能为空")
-			} else {
-
-				c.Data["json"] = models.AddCategoriesFast(data, types.(string))
+				c.ServeJSON()
+				return
 			}
+
+			if parent_id == "" {
+				c.Data["json"] =  models.MessageErrorUint64(0, "添加失败,parent_id不能为空")
+				c.ServeJSON()
+				return
+			}
+
+			if level == "" {
+				c.Data["json"] =  models.MessageErrorUint64(0, "添加失败,level不能为空")
+				c.ServeJSON()
+				return
+			}
+
+			if path == "" {
+				c.Data["json"] = models.MessageErrorUint64(0, "添加失败,path不能为空")
+				c.ServeJSON()
+				return
+			}
+
+				c.Data["json"] = models.AddCategoriesFast(data)
+
 		} else {
 			c.Data["json"] = models.MessageErrorUint64(0, err.Error())
 		}
@@ -88,34 +119,30 @@ func (c *CategoriesController) GetOne() {
 	beego.Debug("GetOne")
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseUint(idStr,10, 64)
-	v := models.GetCategoriesById(id)
 
-	c.Data["json"] = v
+	if c.Method == "fast" {
+		v := models.GetCategoriesFastById(id)
+		c.Data["json"] = v
+	} else {
+		v := models.GetCategoriesById(id)
+		c.Data["json"] = v
+	}
+
 	c.ServeJSON()
 	return
 }
 
-// GetAll ...
-// @Title Get All
-// @Description get Categories
-// @Param	query	query	string	false	"Filter. e.g. col1:v1,col2:v2 ..."
-// @Param	fields	query	string	false	"Fields returned. e.g. col1,col2 ..."
-// @Param	sortby	query	string	false	"Sorted-by fields. e.g. col1,col2 ..."
-// @Param	order	query	string	false	"Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc ..."
-// @Param	limit	query	string	false	"Limit the size of result set. Must be an integer"
-// @Param	offset	query	string	false	"Start position of result set. Must be an integer"
-// @Success 200 {object} models.Categories
-// @Failure 403
-// @router / [get]
-//自定义开发模式
+
+
 func (c *CategoriesController) GetAll() {
 	beego.Debug("GetAll")
-
+	beego.Debug(c.Method)
 	var fields []string
 	var sortby []string
 	var order []string
 	var query = make(map[string]string)
-	var keys = make(map[string]string)
+	var names = make(map[string]string)
+
 	var page_size int64 = 10
 	var page int64
 	// type
@@ -123,27 +150,34 @@ func (c *CategoriesController) GetAll() {
 
 	if v := c.GetString("type"); v != "" {
 		types = v
+	}else{
+		// c.Data["json"] = models.MessageErrorUint64(0, "查询失败,type不能为空")
+		// c.ServeJSON()
+		// return
 	}
+
 
 	// fields: col1,col2,entity.col3
 	if v := c.GetString("fields"); v != "" {
 		fields = strings.Split(v, ",")
 	}
 	// limit: 10 (default is 10)
-	if v, err := c.GetInt64("page_size"); err == nil {
+	if v, err := c.GetInt64("perPage"); err == nil {
 		page_size = v
 	}
 	// offset: 0 (default is 0)
 	if v, err := c.GetInt64("page"); err == nil {
-		page = (v-1)*page_size
+		page = v
 	}
-	beego.Debug(page)
+
+	//分页
+
 	// sortby: col1,col2
-	if v := c.GetString("sortby"); v != "" {
+	if v := c.GetString("orderBy"); v != "" {
 		sortby = strings.Split(v, ",")
 	}
 	// order: desc,asc
-	if v := c.GetString("order"); v != "" {
+	if v := c.GetString("orderDir"); v != "" {
 		order = strings.Split(v, ",")
 	}
 	// query: k:v,k:v
@@ -151,7 +185,7 @@ func (c *CategoriesController) GetAll() {
 		for _, cond := range strings.Split(v, ",") {
 			kv := strings.SplitN(cond, ":", 2)
 			if len(kv) != 2 {
-				c.Data["json"] = errors.New("Error: invalid query key/value pair")
+				c.Data["json"] = errors.New("Error: invalid names key/value pair")
 				c.ServeJSON()
 				return
 			}
@@ -161,7 +195,7 @@ func (c *CategoriesController) GetAll() {
 	}
 
 	// keys: k:v,k:v
-	if v := c.GetString("keys"); v != "" {
+	if v := c.GetString("names"); v != "" {
 		for _, cond := range strings.Split(v, ",") {
 			kv := strings.SplitN(cond, ":", 2)
 			if len(kv) != 2 {
@@ -170,12 +204,19 @@ func (c *CategoriesController) GetAll() {
 				return
 			}
 			k, v := kv[0], kv[1]
-			keys[k] = v
+			names[k] = v
 		}
 	}
 
-	v := models.GetAllCategories(types,query,keys, fields, sortby, order, page, page_size)
-	c.Data["json"] = v
+
+	if c.Method == "fast" {
+		v := models.GetAllCategoriesFast(types, query, names, fields, sortby, order, page, page_size)
+		c.Data["json"] = v
+	} else {
+		v := models.GetAllCategories(types, query, names, fields, sortby, order, page, page_size)
+		c.Data["json"] = v
+	}
+
 	c.ServeJSON()
 	return
 }
@@ -190,15 +231,58 @@ func (c *CategoriesController) GetAll() {
 // @router /:id [put]
 func (c *CategoriesController) Put() {
 	beego.Debug("Put")
+	beego.Debug("Put")
+	beego.Debug(c.Method)
 	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.ParseUint(idStr,10, 64)
-	v := models.CategoriesData{Id: id}
-	 err := json.Unmarshal(c.Ctx.Input.RequestBody, &v);
-	if	err == nil {
-		 data := models.UpdateCategoriesById(&v)
-		 c.Data["json"] =data
+	id, _ := strconv.ParseUint(idStr, 10, 64)
+
+	if c.Method == "fast" {
+		var data map[string]interface{}
+		beego.Debug("c.Ctx.Input.RequestBody")
+		beego.Debug(c.Ctx.Input.RequestBody)
+		err := json.Unmarshal(c.Ctx.Input.RequestBody, &data)
+		if err == nil {
+
+			types := models.GetMapValue("type", data)
+			parent_id := models.GetMapValue("parent_id", data)
+			level := models.GetMapValue("level", data)
+			path := models.GetMapValue("path", data)
+			if types == "" {
+				c.Data["json"] = models.MessageErrorUint64(0, "添加失败,type不能为空")
+				c.ServeJSON()
+				return
+			}
+
+			if parent_id == "" {
+				c.Data["json"] =  models.MessageErrorUint64(0, "添加失败,parent_id不能为空")
+				c.ServeJSON()
+				return
+			}
+
+			if level == "" {
+				c.Data["json"] =  models.MessageErrorUint64(0, "添加失败,level不能为空")
+				c.ServeJSON()
+				return
+			}
+
+			if path == "" {
+				c.Data["json"] = models.MessageErrorUint64(0, "添加失败,path不能为空")
+				c.ServeJSON()
+				return
+			}
+			c.Data["json"] = models.UpdateCategoriesByIdFast(data, id)
+		} else {
+			c.Data["json"] = models.MessageErrorUint64(0, err.Error())
+		}
 	} else {
-		c.Data["json"] =models.MessageErrorUint64(id,err.Error())
+		v := models.CategoriesData{Id: id}
+		err := json.Unmarshal(c.Ctx.Input.RequestBody, &v);
+		if	err == nil {
+			data := models.UpdateCategoriesById(&v)
+			c.Data["json"] =data
+		} else {
+			c.Data["json"] =models.MessageErrorUint64(id,err.Error())
+		}
 	}
 	c.ServeJSON()
 }

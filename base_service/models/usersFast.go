@@ -225,11 +225,11 @@ func GetAllUsersFast(types string, query map[string]string, names map[string]str
 	}
 
 	if count <= 0 {
-		return MessageErrorMap(data, "获取用户列表失败,没有查到合法数据")
+		return MessageErrorMap(data, "没有查到数据,请添加数据")
 	}
 
 	if 0 == len(DataList) {
-		return MessageErrorMap(data, "获取用户列表失败,没有查到合法数据")
+		return MessageErrorMap(data, "没有查到数据,请添加数据")
 	}
 
 	dataList := []map[string]string{}
@@ -284,7 +284,7 @@ func GetAllUsersFast(types string, query map[string]string, names map[string]str
 	returnData["page"] = page
 	returnData["perPage"] = page_size
 
-	return MessageSucessMap(returnData, "获取用户列表成功")
+	return MessageSucessMap(returnData, "获取数据成功")
 }
 
 func GetUsersByIdFast(id uint64) (data map[string]interface{}) {
@@ -293,12 +293,12 @@ func GetUsersByIdFast(id uint64) (data map[string]interface{}) {
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  users where id=?",id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorMap(data,"获取单条用户信息失败,请检查传入id参数")
+		return  MessageErrorMap(data,"获取数据失败,请检查传入id参数")
 	}
 
 	attributes,errs := GetAttributes(id)
 	if errs != nil {        //处理err
-		return  MessageErrorMap(data,"获取单条用户信息失败")
+		return  MessageErrorMap(data,"获取数据失败")
 	}
 
 
@@ -331,7 +331,7 @@ func GetUsersByIdFast(id uint64) (data map[string]interface{}) {
 	returnData["created_time"]=created_time
 	returnData["updated_time"]=updated_time
 
-	return  MessageSucessMap(returnData,"获取用户信息成功")
+	return  MessageSucessMap(returnData,"获取数据成功")
 }
 
 //修改用户
@@ -354,7 +354,7 @@ func UpdateUsersByIdFast(user map[string]interface{},id uint64) (map[string]inte
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorUint64(id,"修改配置失败")
+		return  MessageErrorUint64(id,"修改失败")
 	}
 
 	var  attribute Attribute
@@ -379,5 +379,5 @@ func UpdateUsersByIdFast(user map[string]interface{},id uint64) (map[string]inte
 
 	//如果配置存在则更新
 
-	return  MessageSucessUint64(id,"修改用户成功")
+	return  MessageSucessUint64(id,"修改成功")
 }

@@ -63,27 +63,22 @@ func AddProductsFast(product map[string]interface{},types string) (data map[stri
 		AddAttributes(&attribute,id,"product")
 	}
 
-	return  MessageSucessUint64(id,"添加产品成功")
+	return  MessageSucessUint64(id,"添加成功")
 }
 
-/*  使用interface{}初始化一个一维映射
-* 关键点：interface{} 可以代表任意类型
-* 原理知识点:interface{} 就是一个空接口，所有类型都实现了这个接口，所以它可以代表所有类型
- */
-// 获取单条配置 通过id
-// Id doesn't exist
+
 func GetProductsFastById(id uint64) (data map[string]interface{}) {
 	orm.Debug = true
 	o := orm.NewOrm()
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  products where id=?",id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorMap(data,"获取单条产品失败,请检查传入id参数")
+		return  MessageErrorMap(data,"获取数据失败,请检查传入id参数")
 	}
 
 	attributes,errs := GetAttributes(id)
 	if errs != nil {        //处理err
-		return  MessageErrorMap(data,"获取单条产品失败")
+		return  MessageErrorMap(data,"获取数据失败")
 	}
 
 
@@ -108,12 +103,11 @@ func GetProductsFastById(id uint64) (data map[string]interface{}) {
 	returnData["created_time"]=created_time
 	returnData["updated_time"]=updated_time
 
-	return  MessageSucessMap(returnData,"获取单条产品成功")
+	return  MessageSucessMap(returnData,"获取数据成功")
 }
 
 
-// GetAllCategories retrieves all Categories matches certain condition. Returns empty list if
-// no records exist
+
 
 func GetAllProductsFast(types string,query map[string]string, names map[string]string,fields []string, sortby []string, order []string,
 	page int64, page_size int64,category_ids string) (data map[string]interface{}) {
@@ -137,12 +131,12 @@ func GetAllProductsFast(types string,query map[string]string, names map[string]s
 
 
 	if count <=0 {
-		return MessageErrorMap(data,"获取产品列表失败,没有查到合法数据")
+		return MessageErrorMap(data,"没有查到数据,请添加数据")
 	}
 
 
 	if  0== len(DataList){
-		return MessageErrorMap(data,"获取产品列表失败,没有查到合法数据")
+		return MessageErrorMap(data,"没有查到数据,请添加数据")
 	}
 
 

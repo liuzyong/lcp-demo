@@ -134,7 +134,7 @@ func GetAllCategories(types string,query map[string]string, keys map[string]stri
 	counts, err := strconv.ParseInt(count, 10, 64)
 	if err != nil  || counts <=0 {
 		beego.Debug(err)
-		return MessageErrorMap(data,"获取配置列表失败,没有查到合法数据")
+		return MessageErrorMap(data,"获取列表失败,没有查到合法数据")
 	}
 
 	//获取配置列表数据
@@ -142,7 +142,7 @@ func GetAllCategories(types string,query map[string]string, keys map[string]stri
 	_, errs := o.Raw(sql,types,page,page_size).Values(&ConfigList)
 	if errs != nil  {
 		beego.Debug(errs)
-		return MessageErrorMap(data,"获取配置列表失败,没有查到合法数据")
+		return MessageErrorMap(data,"获取列表失败,没有查到合法数据")
 	}
 	for i := 0; i < len(ConfigList); i++ {
 		beego.Debug(ConfigList[i])
@@ -175,7 +175,7 @@ func GetAllCategories(types string,query map[string]string, keys map[string]stri
 	returnData["page"]=page
 	returnData["page_size"]=page_size
 
-	return  MessageSucessMap(returnData,"获取配置列表成功")
+	return  MessageSucessMap(returnData,"获取列表成功")
 }
 
 
@@ -277,7 +277,7 @@ func UpdateCategoriesById(m *CategoriesData) (map[string]interface{}) {
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorUint64(m.Id,"修改配置失败")
+		return  MessageErrorUint64(m.Id,"修改失败")
 	}
 
 	for i := 0; i < len(m.Attribute); i++ {
@@ -287,7 +287,7 @@ func UpdateCategoriesById(m *CategoriesData) (map[string]interface{}) {
 	beego.Debug(m.Attribute)
 	//如果配置存在则更新
 
-	return  MessageSucessUint64(m.Id,"修改配置成功")
+	return  MessageSucessUint64(m.Id,"修改成功")
 }
 
 // DeleteCategories deletes Categories by Id and returns error if
@@ -298,14 +298,14 @@ func DeleteCategories(id uint64) (map[string]interface{}) {
 	// ascertain id exists in the database
 	if err := o.Read(&v);
 	  err != nil {
-		return  MessageErrorUint64(id,"配置不存在")
+		return  MessageErrorUint64(id,"数据不存在")
 	}
 	if _, err := o.Delete(&Categories{Id: id});
 		err != nil {
-			return  MessageErrorUint64(id,"删除配置失败")
+			return  MessageErrorUint64(id,"删除失败")
 		}
 	DeleteAttributes(id)
-	return  MessageSucessUint64(id,"删除配置成功")
+	return  MessageSucessUint64(id,"删除成功")
 }
 
 

@@ -1,13 +1,10 @@
 package models
 
 import (
-	"errors"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"reflect"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -35,22 +32,22 @@ type CategoriesDataFast struct {
 
 
 
-func AddCategoriesFast(category map[string]interface{},types string) (data map[string]interface{}) {
+func AddCategoriesFast(category map[string]interface{}) (data map[string]interface{}) {
 	id :=SnowflakeId()
 	orm.Debug = true
 	o := orm.NewOrm()
 
-	parent_id := GetMapValue("password", category)
-	level := GetMapValue("password", category)
-	path := GetMapValue("password", category)
-
+	parent_id := GetMapValue("parent_id", category)
+	level := GetMapValue("level", category)
+	path := GetMapValue("path", category)
+	types :=GetMapValue("type", category)
 
 	if parent_id == "" {
-		return MessageErrorUint64(0, "添加失败,path不能为空")
+		return MessageErrorUint64(0, "添加失败,parent_id不能为空")
 	}
 
 	if level == "" {
-		return MessageErrorUint64(0, "添加失败,path不能为空")
+		return MessageErrorUint64(0, "添加失败,level不能为空")
 	}
 
 	if path == "" {
@@ -65,26 +62,18 @@ func AddCategoriesFast(category map[string]interface{},types string) (data map[s
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorMap(data,"添加产品失败")
+		return  MessageErrorMap(data,"添加失败")
 	}
 
 
 	beego.Debug(category)
-
-
-	var  attribute Attribute
-	for key, value := range category {
-
-		attribute.SourceId=id
-		attribute.Name=key
-		attribute.Value=value.(string)
-		attribute.Format=getDataType(value)
-		if attribute.Name=="type"{
-			continue
-		}
-		//UpdateAttributes(&attribute,id)
-		AddAttributes(&attribute,id,"category")
-	}
+	deleteMap := make(map[string]interface{})
+	deleteMap["parent_id"]=parent_id
+	deleteMap["level"]=level
+	deleteMap["parent_id"]=parent_id
+	deleteMap["path"]=path
+	deleteMap["type"]=types
+	InsertAttributesToDb(category,id,deleteMap)
 
 	return  MessageSucessUint64(id,"添加成功")
 }
@@ -92,239 +81,167 @@ func AddCategoriesFast(category map[string]interface{},types string) (data map[s
 
 
 
+func UpdateCategoriesByIdFast(category map[string]interface{},id uint64) (map[string]interface{}) {
 
-
-
-
-
-/*  使用interface{}初始化一个一维映射
-* 关键点：interface{} 可以代表任意类型
-* 原理知识点:interface{} 就是一个空接口，所有类型都实现了这个接口，所以它可以代表所有类型
- */
-// 获取单条配置 通过id
-// Id doesn't exist
-func GetCategoriesByIdFast(id uint64) (data map[string]interface{}) {
 	orm.Debug = true
 	o := orm.NewOrm()
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  categories where id=?",id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorMap(data,"获取单条配置失败")
+		return  MessageErrorUint64(id,"数据不存在")
+	}
+	beego.Debug("UpdateProductByIdFast")
+
+	types := GetMapValue("type", category)
+	parent_id := GetMapValue("parent_id", category)
+	level := GetMapValue("level", category)
+	path := GetMapValue("path", category)
+	date := GetMapValue("date", category)
+
+	beego.Debug(date)
+	sql:="UPDATE  `categories` SET `parent_id`=?, `level`=?, `path`=?, `type`=?, `updated_time`=? " +
+		"WHERE (`id`=?);"
+	res, err := o.Raw(sql,parent_id,level,path,types,time.Now(),id).Exec()
+	if err != nil {
+		num, _ := res.RowsAffected()
+		fmt.Println("mysql row affected nums: ", num)
+		return MessageErrorUint64(id, "修改失败")
+	}
+
+	deleteMap := make(map[string]interface{})
+	deleteMap["parent_id"]=parent_id
+	deleteMap["level"]=level
+	deleteMap["parent_id"]=parent_id
+	deleteMap["type"]=types
+	UpdateAttributesToDb(category,id,deleteMap)
+	//如果配置存在则更新
+
+	return MessageSucessUint64(id, "修改配置成功")
+}
+
+func GetCategoriesFastById(id uint64) (data map[string]interface{}) {
+	orm.Debug = true
+	o := orm.NewOrm()
+	var maps [] orm.Params
+	num,err := o.Raw("select * from  categories where id=?",id).Values(&maps)
+	if err != nil  || num <= 0{        //处理err
+		return  MessageErrorMap(data,"获取数据失败,请检查传入id参数")
 	}
 
 	attributes,errs := GetAttributes(id)
 	if errs != nil {        //处理err
-		return  MessageErrorMap(data,"获取单条配置失败")
+		return  MessageErrorMap(data,"获取单条数据失败")
 	}
-	maps[0]["attributes"]=attributes
-	return  MessageSucessMap(maps[0],"获取单条配置成功")
+
+
+
+	returnData := make(map[string]interface{})
+	for i := 0; i < len(attributes); i++ {
+		//var data map[string]string
+		key,value:=GetMapAttibutesKeyAndValue(attributes[i])
+		beego.Debug(key)
+		beego.Debug(value)
+		//data[key]=value
+		fmt.Printf("v1 type:%T\n", key)
+		fmt.Printf("v2 type:%T\n", value)
+		returnData[key]=value
+
+	}
+	returnData["id"]=uint64ToString(id)
+	types:=GetMapValue("type",maps[0]).(string)
+	level:=GetMapValue("level",maps[0]).(string)
+	parent_id:=GetMapValue("parent_id",maps[0]).(string)
+	path:=GetMapValue("path",maps[0]).(string)
+	created_time:=GetMapValue("created_time",maps[0]).(string)
+	updated_time:=GetMapValue("updated_time",maps[0]).(string)
+	returnData["type"]=types
+	returnData["level"]=level
+	returnData["parent_id"]=parent_id
+	returnData["path"]=path
+	returnData["created_time"]=created_time
+	returnData["updated_time"]=updated_time
+
+	return  MessageSucessMap(returnData,"获取单条产品成功")
 }
 
-
-
-
-
-
-// GetAllCategories retrieves all Categories matches certain condition. Returns empty list if
-// no records exist
-
-func GetAllCategoriesFast(types string,query map[string]string, keys map[string]string,fields []string, sortby []string, order []string,
+func GetAllCategoriesFast(types string,query map[string]string, names map[string]string,fields []string, sortby []string, order []string,
 	page int64, page_size int64) (data map[string]interface{}) {
 
-	var sql string
-	var  sqlCount string
-	//如果是通过keys来进行过滤查询 该方式性能较差,可能是下面查询方式的 二十分之一性能
-	if len(keys) != 0{
-		sqlCount ="select count(DISTINCT source_id) as count from  attributes  force index(type_name_source_id_language)  " +
-			"where type=? "
-		sql ="select DISTINCT source_id from  attributes  force index(type_name_source_id_language)  " +
-			"where type=? order by created_time desc limit ?,?"
+	var DataList [] orm.Params
+	var count int64
+	 category_ids :=""
+	//如果是通过names来进行过滤查询 该方式性能较差,可能是下面查询方式的 二十分之一性能
+	if len(names) != 0{
+		//参数遍历
+		DataList=FindSourceIdByNameFromAttributes("categories",query,names, fields, sortby, order, page, page_size,category_ids,"product")
+		count=CountSourceIdByNameFromAttributes("categories",query,names,category_ids,"product")
+
 	}else{
-		sqlCount="select count(*) as count from  categories  where  type=?"
-		sql ="select * from  categories  where  type=? order by created_time desc limit ?,?"
-	}
-	orm.Debug = true
-	o := orm.NewOrm()
-	//获取总条数
-	fmt.Println("mysql sql: ", sql)
-	var countNum [] orm.Params
-	_, err := o.Raw(sqlCount,types).Values(&countNum)
-	count :=GetMapValue("count",countNum[0]).(string)
-	counts, err := strconv.ParseInt(count, 10, 64)
-	if err != nil  || counts <=0 {
-		beego.Debug(err)
-		return MessageErrorMap(data,"获取配置列表失败,没有查到合法数据")
+		DataList=FindSourceIdByFromTables("categories",query, fields, sortby, order, page, page_size,category_ids)
+		count=CountSourceIdByFromTables("categories",query,category_ids)
 	}
 
-	//获取配置列表数据
-	var ConfigList [] orm.Params
-	_, errs := o.Raw(sql,types,page,page_size).Values(&ConfigList)
-	if errs != nil  {
-		beego.Debug(errs)
-		return MessageErrorMap(data,"获取配置列表失败,没有查到合法数据")
+
+
+	if count <=0 {
+		return MessageErrorMap(data,"没有查到数据,请添加数据")
 	}
-	for i := 0; i < len(ConfigList); i++ {
-		beego.Debug(ConfigList[i])
-		beego.Debug(ConfigList[i]["id"])
 
 
+	if  0== len(DataList){
+		return MessageErrorMap(data,"没有查到数据,请添加数据")
+	}
+
+
+	dataList := []map[string]string{}
+	for i := 0; i < len(DataList); i++ {
 
 		var source_id uint64
-		//不是通过Key搜索的
-		if len(keys) != 0{
-			id:=GetMapValue("id",ConfigList[i]).(string)
-			source_id, _ = strconv.ParseUint(id, 10, 64)
-		}else{
-			id:=GetMapValue("id",ConfigList[i]).(string)
-			source_id, _ = strconv.ParseUint(id, 10, 64)
-		}
+
+		id:=GetMapValue("id",DataList[i]).(string)
+		source_id, _ = strconv.ParseUint(id, 10, 64)
 
 		//获取详情信息
 		attributes,errs := GetAttributes(source_id)
+		data := make(map[string]string)
 		if errs ==nil{
-			ConfigList[i]["attributes"]=attributes
+			for i := 0; i < len(attributes); i++ {
+				//var data map[string]string
+				key,value:=GetMapAttibutesKeyAndValue(attributes[i])
+				beego.Debug(key)
+				beego.Debug(value)
+				//data[key]=value
+				fmt.Printf("v1 type:%T\n", key)
+				fmt.Printf("v2 type:%T\n", value)
+				data[key]=value
+
+			}
+			data["id"]=id
+			types:=GetMapValue("type",DataList[i]).(string)
+			parent_id:=GetMapValue("parent_id",DataList[i]).(string)
+			path:=GetMapValue("path",DataList[i]).(string)
+			level:=GetMapValue("level",DataList[i]).(string)
+			created_time:=GetMapValue("created_time",DataList[i]).(string)
+			updated_time:=GetMapValue("updated_time",DataList[i]).(string)
+			data["parent_id"]=parent_id
+			data["path"]=path
+			data["level"]=level
+			data["type"]=types
+			data["created_time"]=created_time
+			data["updated_time"]=updated_time
+
+			dataList = append(dataList, data)
+
 		}
-		//fmt.Println("类型t %T\n",reflect.TypeOf(source_id))
 
+		beego.Debug(dataList)
 	}
-
+	beego.Debug(data)
 	returnData  :=map[string]interface{}{}
-	returnData["list"]=ConfigList
-	returnData["count"]=counts
+	returnData["items"]=dataList
+	returnData["count"]=count
 	returnData["page"]=page
-	returnData["page_size"]=page_size
+	returnData["perPage"]=page_size
 
-	return  MessageSucessMap(returnData,"获取配置列表成功")
+	return  MessageSucessMap(returnData,"获取成功")
 }
-
-
-
-func GetAllCategoriessFast(query map[string]string, keys map[string]string,fields []string, sortby []string, order []string,
-	offset int64, limit int64) (ml []interface{}, err error) {
-	o := orm.NewOrm()
-	qs := o.QueryTable(new(Categories))
-	// query k=v
-	for k, v := range query {
-		// rewrite dot-notation to Object__Attribute
-		k = strings.Replace(k, ".", "__", -1)
-		if strings.Contains(k, "isnull") {
-			qs = qs.Filter(k, (v == "true" || v == "1"))
-		} else {
-			qs = qs.Filter(k, v)
-		}
-	}
-	// order by:
-	var sortFields []string
-	if len(sortby) != 0 {
-		if len(sortby) == len(order) {
-			// 1) for each sort field, there is an associated order
-			for i, v := range sortby {
-				orderby := ""
-				if order[i] == "desc" {
-					orderby = "-" + v
-				} else if order[i] == "asc" {
-					orderby = v
-				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
-				}
-				sortFields = append(sortFields, orderby)
-			}
-			qs = qs.OrderBy(sortFields...)
-		} else if len(sortby) != len(order) && len(order) == 1 {
-			// 2) there is exactly one order, all the sorted fields will be sorted by this order
-			for _, v := range sortby {
-				orderby := ""
-				if order[0] == "desc" {
-					orderby = "-" + v
-				} else if order[0] == "asc" {
-					orderby = v
-				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
-				}
-				sortFields = append(sortFields, orderby)
-			}
-		} else if len(sortby) != len(order) && len(order) != 1 {
-			return nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
-		}
-	} else {
-		if len(order) != 0 {
-			return nil, errors.New("Error: unused 'order' fields")
-		}
-	}
-
-	var l []Categories
-	qs = qs.OrderBy(sortFields...)
-	if _, err = qs.Limit(limit, offset).All(&l, fields...); err == nil {
-		if len(fields) == 0 {
-			for _, v := range l {
-				ml = append(ml, v)
-			}
-		} else {
-			// trim unused fields
-			for _, v := range l {
-				m := make(map[string]interface{})
-				val := reflect.ValueOf(v)
-				for _, fname := range fields {
-					m[fname] = val.FieldByName(fname).Interface()
-				}
-				ml = append(ml, m)
-			}
-		}
-		return ml, nil
-	}
-	return nil, err
-}
-
-
-//更新配置
-// UpdateCategories updates Categories by Id and returns error if
-// the record to be updated doesn't exist
-func UpdateCategoriesByIdFast(m *CategoriesData) (map[string]interface{}) {
-
-	orm.Debug = true
-	o := orm.NewOrm()
-	var maps [] orm.Params
-	num,err := o.Raw("select * from  categories where id=?",m.Id).Values(&maps)
-	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorUint64(m.Id,"配置不存在")
-	}
-
-	sql:="UPDATE  `categories` SET `parent_id`=?, `level`=?, `path`=?, `type`=?, `updated_time`=? " +
-		"WHERE (`id`=?);"
-
-	res, err := o.Raw(sql,m.ParentId,m.Level,m.Path,m.Type,time.Now(),m.Id).Exec()
-	if err != nil {
-		num, _ := res.RowsAffected()
-		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorUint64(m.Id,"修改配置失败")
-	}
-
-	for i := 0; i < len(m.Attribute); i++ {
-		UpdateAttributes(&m.Attribute[i],m.Id)
-	}
-
-	beego.Debug(m.Attribute)
-	//如果配置存在则更新
-
-	return  MessageSucessUint64(m.Id,"修改配置成功")
-}
-
-// DeleteCategories deletes Categories by Id and returns error if
-// the record to be deleted doesn't exist
-func DeleteCategoriesFast(id uint64) (map[string]interface{}) {
-	o := orm.NewOrm()
-	v := Categories{Id: id}
-	// ascertain id exists in the database
-	if err := o.Read(&v);
-	  err != nil {
-		return  MessageErrorUint64(id,"配置不存在")
-	}
-	if _, err := o.Delete(&Categories{Id: id});
-		err != nil {
-			return  MessageErrorUint64(id,"删除配置失败")
-		}
-	DeleteAttributes(id)
-	return  MessageSucessUint64(id,"删除配置成功")
-}
-
-
