@@ -285,16 +285,16 @@ func getSourceIdByCategoryId(category_ids string,category_type string,attribute 
 			sourceIdsqlId += id + ","
 		}
 		sourceIdsqlId = strings.TrimSuffix(sourceIdsqlId, ",")
-		if attribute ==true {
-			sourceIdsql = " and source_id in(" + sourceIdsqlId + ")"
-		}else{
-			sourceIdsql = " and id in(" + sourceIdsqlId + ")"
+		if sourceIdsqlId !=""{
+			if attribute ==true {
+				sourceIdsql = " and source_id in(" + sourceIdsqlId + ")"
+			}else{
+				sourceIdsql = " and id in(" + sourceIdsqlId + ")"
+			}
+			return sourceIdsql
 		}
-	}else{
-		sourceIdsql = " "
 	}
-
-	return sourceIdsql
+	return " and 1=0 "
 }
 
 

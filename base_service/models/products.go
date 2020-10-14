@@ -64,12 +64,12 @@ func GetAllProducts(types string,query map[string]string, names map[string]strin
 
 
 	if count <=0 {
-		return MessageErrorMap(data,"获取产品列表失败,没有查到合法数据")
+		return MessageErrorMap(data,"获取产品失败,没有查到合法数据")
 	}
 
 
 	if  0== len(DataList){
-		return MessageErrorMap(data,"获取产品列表失败,没有查到合法数据")
+		return MessageErrorMap(data,"获取产品失败,没有查到合法数据")
 	}
 
 	for i := 0; i < len(DataList); i++ {
@@ -113,7 +113,7 @@ func AddProducts(c *ProductsData) (data map[string]interface{}) {
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorMap(data,"添加产品失败")
+		return  MessageErrorMap(data,"添加失败")
 	}
 
 	//填写产品属性
@@ -123,7 +123,7 @@ func AddProducts(c *ProductsData) (data map[string]interface{}) {
 	//添加分类属性
 	for _, v := range c.CategoryIds {
 		beego.Debug("v")
-		AddRelations(id,v,"category_product")
+		AddRelations(id,v,"product_category")
 	}
 
 	for i := 0; i < len(c.Attribute); i++ {
@@ -166,8 +166,8 @@ func UpdateProductById(m *ProductsData) (map[string]interface{}) {
 	if(0< len(m.CategoryIds)){
 		for _, v := range m.CategoryIds {
 			beego.Debug("v")
-			DeleteRelations(m.Id,"category_product")
-			AddRelations(m.Id,v,"category_product")
+			DeleteRelations(m.Id,"product_category")
+			AddRelations(m.Id,v,"product_category")
 		}
 	}
 
@@ -216,15 +216,15 @@ func DeleteProducts(id uint64) (map[string]interface{}) {
 	// ascertain id exists in the database
 	if err := o.Read(&v);
 		err != nil {
-		return  MessageErrorUint64(id,"产品不存在")
+		return  MessageErrorUint64(id,"数据不存在")
 	}
 	if _, err := o.Delete(&Products{Id: id});
 		err != nil {
-		return  MessageErrorUint64(id,"删除产品失败")
+		return  MessageErrorUint64(id,"删除失败")
 	}
 	DeleteAttributes(id)
-	DeleteRelations(id,"category_product")
-	return  MessageSucessUint64(id,"删除产品成功")
+	DeleteRelations(id,"product_category")
+	return  MessageSucessUint64(id,"删除成功")
 }
 
 

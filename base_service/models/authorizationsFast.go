@@ -55,7 +55,7 @@ func AddAuthorizationsFast(authorization map[string]interface{}, types string) (
 		return MessageErrorMap(data, "添加权限失败")
 	}
 
-
+	AddCategoriesRelation(GetMapValue("category_ids",authorization),id,"authorization_category")
 	beego.Debug(authorization)
 
 	var attribute Attribute
@@ -176,6 +176,9 @@ func UpdateAuthorizationsByIdFast(authorization map[string]interface{},id uint64
 		fmt.Println("mysql row affected nums: ", num)
 		return  MessageErrorUint64(id,"修改权限失败")
 	}
+
+	UpdateCategoriesRelation(GetMapValue("category_ids",authorization),id,"authorization_category")
+
 
 	var  attribute Attribute
 	for key, value := range authorization {

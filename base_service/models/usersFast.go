@@ -105,7 +105,7 @@ func AddUsersFast(user map[string]interface{}, types string) (data map[string]in
 
 	beego.Debug(user)
 
-
+	AddCategoriesRelation(GetMapValue("category_ids",user),id,"user_category")
 	var attribute Attribute
 	for key, value := range user {
 		//判断是否需要添加用户权限
@@ -356,6 +356,7 @@ func UpdateUsersByIdFast(user map[string]interface{},id uint64) (map[string]inte
 		fmt.Println("mysql row affected nums: ", num)
 		return  MessageErrorUint64(id,"修改失败")
 	}
+	UpdateCategoriesRelation(GetMapValue("category_ids",user),id,"user_category")
 
 	var  attribute Attribute
 	for key, value := range user {

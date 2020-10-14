@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"strings"
 	"time"
 )
 
@@ -23,16 +24,46 @@ type Relations struct {
 func (t *Relations) TableName() string {
 	return "relations"
 }
+//添加分类关联关系
+func AddCategoriesRelation(categories interface{},id uint64,types string){
 
+	if categories !=""{
+		categories_ids :=strings.Split(categories.(string), ",")
+		beego.Debug(categories_ids)
+		for _, v := range categories_ids {
+			beego.Debug("v")
+			beego.Debug(v)
+			AddRelations(id,StringToUint64(v),types)
+		}
+	}
+}
+
+//更新分类关联关系
+func UpdateCategoriesRelation(categories interface{},id uint64,types string){
+
+	if  categories !=""{
+		categories_ids :=strings.Split(categories.(string), ",")
+		beego.Debug(categories_ids)
+		//添加分类属性
+
+		//更新分类属性
+		for _, v := range categories_ids {
+			beego.Debug("v")
+			beego.Debug(v)
+			DeleteRelations(id,types)
+			AddRelations(id,StringToUint64(v),types)
+		}
+	}
+}
 
 // AddCategories insert a new Categories into database and returns
 // last inserted Id on success.
 func DeleteRelations(SourceId uint64, Type string) bool {
 	orm.Debug = true
 	o := orm.NewOrm()
-	sql :="delete  from `relations` where source_id=? and type=?"
+	sql :="delete  from `relations` where (source_id=? or target_id ) and type=?"
 	beego.Debug(sql)
-	res, err := o.Raw(sql,SourceId,Type).Exec()
+	res, err := o.Raw(sql,SourceId,SourceId,Type).Exec()
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)

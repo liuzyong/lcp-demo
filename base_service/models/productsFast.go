@@ -5,7 +5,6 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -37,23 +36,9 @@ func AddProductsFast(product map[string]interface{},types string) (data map[stri
 		return  MessageErrorMap(data,"添加失败")
 	}
 
-	categories:=GetMapValue("category_ids",product)
-	categories_ids :=strings.Split(categories.(string), ",")
-	beego.Debug(categories_ids)
-	//添加分类属性
-	for i := 0; i < len(categories_ids); i++{
-		fmt.Println(i, " ", categories_ids[i])
-	}
-
-	for _, v := range categories_ids {
-		beego.Debug("v")
-		beego.Debug(v)
-		AddRelations(id,StringToUint64(v),"product_category")
-	}
+	AddCategoriesRelation(GetMapValue("category_ids",product),id,"product_category")
 
 	beego.Debug(product)
-
-
 	var  attribute Attribute
 	for key, value := range product {
 
@@ -189,7 +174,7 @@ func GetAllProductsFast(types string,query map[string]string, names map[string]s
 	returnData["page"]=page
 	returnData["perPage"]=page_size
 
-	return  MessageSucessMap(returnData,"获取产品列表成功")
+	return  MessageSucessMap(returnData,"获取数据成功")
 }
 
 
@@ -203,39 +188,21 @@ func UpdateProductByIdFast(product map[string]interface{},id uint64) (map[string
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  products where id=?",id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorUint64(id,"产品不存在")
+		return  MessageErrorUint64(id,"数据不存在")
 	}
 	beego.Debug("UpdateProductByIdFast1")
-	category_id :=GetMapValue("category_id",product)
-	if category_id !=""{
-		//sql:="UPDATE  `products` SET `category_id`=?, `updated_time`=? " +
-		//	"WHERE (`id`=?);"
-		//_, err := o.Raw(sql,category_id,time.Now(),id).Exec()
-		//
-		//if err != nil {
-		//	return  MessageErrorUint64(id,"修改产品失败")
-		//}
+	UpdateCategoriesRelation(GetMapValue("category_ids",product),id,"product_category")
 
 
-		//更新分类属性
-		//if(0< len(m.CategoryIds)){
-		//	for _, v := range m.CategoryIds {
-		//		beego.Debug("v")
-		//		DeleteRelations(m.Id,"category_product")
-		//		AddRelations(m.Id,v,"category_product")
-		//	}
-		//}
 
-	}else{
-		sql:="UPDATE  `products` SET  `updated_time`=? " +
-			"WHERE (`id`=?);"
-		_, err := o.Raw(sql,time.Now(),id).Exec()
+	sql:="UPDATE  `products` SET  `updated_time`=? " +
+		"WHERE (`id`=?);"
+	_, errs := o.Raw(sql,time.Now(),id).Exec()
 
-		if err != nil {
-			return  MessageErrorUint64(id,"修改产品失败")
-		}
+	if errs != nil {
+		return  MessageErrorUint64(id,"修改失败")
 	}
-	beego.Debug("UpdateProductByIdFast2")
+
 
 	beego.Debug(product)
 
@@ -259,7 +226,5 @@ func UpdateProductByIdFast(product map[string]interface{},id uint64) (map[string
 		}
 	}
 
-	//如果配置存在则更新
-
-	return  MessageSucessUint64(id,"修改产品成功")
+	return  MessageSucessUint64(id,"修改成功")
 }

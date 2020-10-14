@@ -42,16 +42,7 @@ func AddConfigurationsFast(configuration map[string]interface{}, types string) (
 		return MessageErrorMap(data, "添加配置失败")
 	}
 
-	//
-	////填写产品属性
-	//
-
-	////添加分类属性
-	//for _, v := range c.CategoryIds {
-	//	beego.Debug("v")
-	//	AddRelations(id,v,"category_product")
-	//}
-	//
+	AddCategoriesRelation(GetMapValue("category_ids",configuration),id,"configuration_category")
 	beego.Debug(configuration)
 
 	var attribute Attribute
@@ -166,6 +157,7 @@ func UpdateConfigurationsByIdFast(configuration map[string]interface{}, id uint6
 		fmt.Println("mysql row affected nums: ", num)
 		return MessageErrorUint64(id, "修改失败")
 	}
+	UpdateCategoriesRelation(GetMapValue("category_ids",configuration),id,"configuration_category")
 
 	var attribute Attribute
 	for key, value := range configuration {
