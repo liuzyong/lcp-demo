@@ -61,7 +61,7 @@ func UpdateCategoriesRelation(categories interface{},id uint64,types string){
 func DeleteRelations(SourceId uint64, Type string) bool {
 	orm.Debug = true
 	o := orm.NewOrm()
-	sql :="delete  from `relations` where (source_id=? or target_id ) and type=?"
+	sql :="delete  from `relations` where (source_id=? or target_id=? ) and type=?"
 	beego.Debug(sql)
 	res, err := o.Raw(sql,SourceId,SourceId,Type).Exec()
 	if err != nil {

@@ -145,7 +145,7 @@ func GetAllAuthorizationsFast(types string, query map[string]string, names map[s
 	returnData["page"] = page
 	returnData["perPage"] = page_size
 
-	return MessageSucessMap(returnData, "获取配置列表成功")
+	return MessageSucessMap(returnData, "获取数据成功")
 }
 
 
@@ -200,7 +200,6 @@ func UpdateAuthorizationsByIdFast(authorization map[string]interface{},id uint64
 		}
 	}
 
-	//如果配置存在则更新
 
 	return  MessageSucessUint64(id,"修改权限成功")
 }

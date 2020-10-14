@@ -350,7 +350,7 @@ func FindSourceIdByNameFromAttributes(table string, query map[string]string, nam
 			sql = "select DISTINCT source_id from  attributes  force index(type_name_source_id)  " +
 				"where 1=1 " + types + "  and " + "  ( name=" + k + " and value=" + v + " ) " + " and source_id in(" + sourceId + ")" + sourceIdsql
 		}
-		//获取配置列表数据
+
 
 		_, errs := o.Raw(sql).Values(&SourceIdList)
 		if errs != nil {
@@ -430,7 +430,7 @@ func CountSourceIdByNameFromAttributes(table string, query map[string]string, na
 			beego.Debug("in find")
 			beego.Debug(sql)
 		}
-		//获取配置列表数据
+
 
 		_, errs := o.Raw(sql).Values(&SourceIdList)
 		if errs != nil {

@@ -39,7 +39,7 @@ func AddConfigurationsFast(configuration map[string]interface{}, types string) (
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return MessageErrorMap(data, "添加配置失败")
+		return MessageErrorMap(data, "添加失败")
 	}
 
 	AddCategoriesRelation(GetMapValue("category_ids",configuration),id,"configuration_category")
@@ -57,7 +57,7 @@ func AddConfigurationsFast(configuration map[string]interface{}, types string) (
 		AddAttributes(&attribute, id, "configuration")
 	}
 
-	return MessageSucessUint64(id, "添加配置成功")
+	return MessageSucessUint64(id, "添加成功")
 }
 
 func GetAllConfigurationsFast(types string, query map[string]string, names map[string]string, fields []string, sortby []string, order []string,
@@ -81,11 +81,11 @@ func GetAllConfigurationsFast(types string, query map[string]string, names map[s
 	}
 
 	if count <= 0 {
-		return MessageErrorMap(data, "获取配置列表失败,没有查到合法数据")
+		return MessageErrorMap(data, "获取数据失败,没有查到合法数据")
 	}
 
 	if 0 == len(DataList) {
-		return MessageErrorMap(data, "获取配置列表失败,没有查到合法数据")
+		return MessageErrorMap(data, "获取数据失败,没有查到合法数据")
 	}
 
 	dataList := []map[string]string{}
@@ -132,12 +132,10 @@ func GetAllConfigurationsFast(types string, query map[string]string, names map[s
 	returnData["page"] = page
 	returnData["perPage"] = page_size
 
-	return MessageSucessMap(returnData, "获取配置列表成功")
+	return MessageSucessMap(returnData, "获取数据成功")
 }
 
-//更新配置
-// UpdateConfigurations updates Configurations by Id and returns error if
-// the record to be updated doesn't exist
+
 func UpdateConfigurationsByIdFast(configuration map[string]interface{}, id uint64) map[string]interface{} {
 
 	orm.Debug = true
@@ -179,7 +177,6 @@ func UpdateConfigurationsByIdFast(configuration map[string]interface{}, id uint6
 		}
 	}
 
-	//如果配置存在则更新
 
 	return MessageSucessUint64(id, "修改成功")
 }

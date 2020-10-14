@@ -64,12 +64,12 @@ func AddConfigurations(c *ConfigurationsData) (data map[string]interface{}) {
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorMap(data,"添加配置失败")
+		return  MessageErrorMap(data,"添加失败")
 	}
 	for i := 0; i < len(c.Attribute); i++ {
 		AddAttributes(&c.Attribute[i],id,c.Type)
 	}
-	return  MessageSucessUint64(id,"添加配置成功")
+	return  MessageSucessUint64(id,"添加成功")
 }
 
 
@@ -77,27 +77,21 @@ func AddConfigurations(c *ConfigurationsData) (data map[string]interface{}) {
 
 
 
-/*  使用interface{}初始化一个一维映射
-* 关键点：interface{} 可以代表任意类型
-* 原理知识点:interface{} 就是一个空接口，所有类型都实现了这个接口，所以它可以代表所有类型
- */
-// 获取单条配置 通过id
-// Id doesn't exist
 func GetConfigurationsById(id uint64) (data map[string]interface{}) {
 	orm.Debug = true
 	o := orm.NewOrm()
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  configurations where id=?",id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorMap(data,"获取单条配置失败")
+		return  MessageErrorMap(data,"获取数据失败")
 	}
 
 	attributes,errs := GetAttributes(id)
 	if errs != nil {        //处理err
-		return  MessageErrorMap(data,"获取单条配置失败")
+		return  MessageErrorMap(data,"获取数据失败")
 	}
 	maps[0]["attributes"]=attributes
-	return  MessageSucessMap(maps[0],"获取单条配置成功")
+	return  MessageSucessMap(maps[0],"获取数据成功")
 }
 
 
@@ -133,7 +127,7 @@ func GetAllConfigurations(types string,query map[string]string, keys map[string]
 	counts, err := strconv.ParseInt(count, 10, 64)
 	if err != nil  || counts <=0 {
 		beego.Debug(err)
-		return MessageErrorMap(data,"获取配置列表失败,没有查到合法数据")
+		return MessageErrorMap(data,"获取数据失败,没有查到合法数据")
 	}
 
 	//获取配置列表数据
@@ -141,7 +135,7 @@ func GetAllConfigurations(types string,query map[string]string, keys map[string]
 	_, errs := o.Raw(sql,types,page,page_size).Values(&ConfigList)
 	if errs != nil  {
 		beego.Debug(errs)
-		return MessageErrorMap(data,"获取配置列表失败,没有查到合法数据")
+		return MessageErrorMap(data,"获取数据失败,没有查到合法数据")
 	}
 	for i := 0; i < len(ConfigList); i++ {
 		beego.Debug(ConfigList[i])
@@ -174,7 +168,7 @@ func GetAllConfigurations(types string,query map[string]string, keys map[string]
 	returnData["page"]=page
 	returnData["page_size"]=page_size
 
-	return  MessageSucessMap(returnData,"获取配置列表成功")
+	return  MessageSucessMap(returnData,"获取数据成功")
 }
 
 
@@ -266,7 +260,7 @@ func UpdateConfigurationsById(m *ConfigurationsData) (map[string]interface{}) {
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  Configurations where id=?",m.Id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorUint64(m.Id,"配置不存在")
+		return  MessageErrorUint64(m.Id,"数据不存在")
 	}
 
 	sql:="UPDATE  `configurations` SET `parent_id`=?, `level`=?, `path`=?, `type`=?, `updated_time`=? " +
@@ -276,7 +270,7 @@ func UpdateConfigurationsById(m *ConfigurationsData) (map[string]interface{}) {
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorUint64(m.Id,"修改配置失败")
+		return  MessageErrorUint64(m.Id,"修改失败")
 	}
 
 	for i := 0; i < len(m.Attribute); i++ {
@@ -286,7 +280,7 @@ func UpdateConfigurationsById(m *ConfigurationsData) (map[string]interface{}) {
 	beego.Debug(m.Attribute)
 	//如果配置存在则更新
 
-	return  MessageSucessUint64(m.Id,"修改配置成功")
+	return  MessageSucessUint64(m.Id,"修改成功")
 }
 
 // DeleteConfigurations deletes Configurations by Id and returns error if
@@ -297,14 +291,14 @@ func DeleteConfigurations(id uint64) (map[string]interface{}) {
 	// ascertain id exists in the database
 	if err := o.Read(&v);
 		err != nil {
-		return  MessageErrorUint64(id,"配置不存在")
+		return  MessageErrorUint64(id,"不存在")
 	}
 	if _, err := o.Delete(&Configurations{Id: id});
 		err != nil {
-		return  MessageErrorUint64(id,"删除配置失败")
+		return  MessageErrorUint64(id,"删除失败")
 	}
 	DeleteAttributes(id)
-	return  MessageSucessUint64(id,"删除配置成功")
+	return  MessageSucessUint64(id,"删除成功")
 }
 
 

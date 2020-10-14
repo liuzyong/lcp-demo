@@ -137,17 +137,12 @@ func UpdateUsersById(c *UsersData) (map[string]interface{}) {
 	}
 
 	beego.Debug(c.Attribute)
-	//如果配置存在则更新
+
 
 	return  MessageSucessUint64(c.Id,"修改用户成功")
 }
 
-/*  使用interface{}初始化一个一维映射
-* 关键点：interface{} 可以代表任意类型
-* 原理知识点:interface{} 就是一个空接口，所有类型都实现了这个接口，所以它可以代表所有类型
- */
-// 获取单条配置 通过id
-// Id doesn't exist
+
 func GetUsersById(id uint64) (data map[string]interface{}) {
 	orm.Debug = true
 	o := orm.NewOrm()

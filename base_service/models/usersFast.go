@@ -154,12 +154,7 @@ func AddUsersFast(user map[string]interface{}, types string) (data map[string]in
 	return MessageSucessUint64(id, "用户注册成功")
 }
 
-/*  使用interface{}初始化一个一维映射
-* 关键点：interface{} 可以代表任意类型
-* 原理知识点:interface{} 就是一个空接口，所有类型都实现了这个接口，所以它可以代表所有类型
- */
-// 获取单条配置 通过id
-// Id doesn't exist
+
 func GetUsersByUsername(username string, password string) (data map[string]interface{}) {
 	orm.Debug = true
 	o := orm.NewOrm()
@@ -378,7 +373,7 @@ func UpdateUsersByIdFast(user map[string]interface{},id uint64) (map[string]inte
 		}
 	}
 
-	//如果配置存在则更新
+
 
 	return  MessageSucessUint64(id,"修改成功")
 }

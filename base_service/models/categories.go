@@ -65,12 +65,12 @@ func AddCategories(c *CategoriesData) (data map[string]interface{}) {
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorMap(data,"添加配置失败")
+		return  MessageErrorMap(data,"添加失败")
 	}
 	for i := 0; i < len(c.Attribute); i++ {
 		AddAttributes(&c.Attribute[i],id,c.Type)
 	}
-	return  MessageSucessUint64(id,"添加配置成功")
+	return  MessageSucessUint64(id,"添加成功")
 }
 
 
@@ -78,27 +78,22 @@ func AddCategories(c *CategoriesData) (data map[string]interface{}) {
 
 
 
-/*  使用interface{}初始化一个一维映射
-* 关键点：interface{} 可以代表任意类型
-* 原理知识点:interface{} 就是一个空接口，所有类型都实现了这个接口，所以它可以代表所有类型
- */
-// 获取单条配置 通过id
-// Id doesn't exist
+
 func GetCategoriesById(id uint64) (data map[string]interface{}) {
 	orm.Debug = true
 	o := orm.NewOrm()
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  categories where id=?",id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorMap(data,"获取单条配置失败")
+		return  MessageErrorMap(data,"获取数据失败")
 	}
 
 	attributes,errs := GetAttributes(id)
 	if errs != nil {        //处理err
-		return  MessageErrorMap(data,"获取单条配置失败")
+		return  MessageErrorMap(data,"获取数据失败")
 	}
 	maps[0]["attributes"]=attributes
-	return  MessageSucessMap(maps[0],"获取单条配置成功")
+	return  MessageSucessMap(maps[0],"获取数据成功")
 }
 
 
@@ -137,7 +132,7 @@ func GetAllCategories(types string,query map[string]string, keys map[string]stri
 		return MessageErrorMap(data,"获取列表失败,没有查到合法数据")
 	}
 
-	//获取配置列表数据
+
 	var ConfigList [] orm.Params
 	_, errs := o.Raw(sql,types,page,page_size).Values(&ConfigList)
 	if errs != nil  {
@@ -257,9 +252,7 @@ func GetAllCategoriess(query map[string]string, keys map[string]string,fields []
 }
 
 
-//更新配置
-// UpdateCategories updates Categories by Id and returns error if
-// the record to be updated doesn't exist
+
 func UpdateCategoriesById(m *CategoriesData) (map[string]interface{}) {
 
 	orm.Debug = true
@@ -267,7 +260,7 @@ func UpdateCategoriesById(m *CategoriesData) (map[string]interface{}) {
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  categories where id=?",m.Id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorUint64(m.Id,"配置不存在")
+		return  MessageErrorUint64(m.Id,"数据不存在")
 	}
 
 	sql:="UPDATE  `categories` SET `parent_id`=?, `level`=?, `path`=?, `type`=?, `updated_time`=? " +
@@ -285,7 +278,7 @@ func UpdateCategoriesById(m *CategoriesData) (map[string]interface{}) {
 	}
 
 	beego.Debug(m.Attribute)
-	//如果配置存在则更新
+
 
 	return  MessageSucessUint64(m.Id,"修改成功")
 }

@@ -51,7 +51,7 @@ func (c *ConfigurationsController) Post() {
 		if err == nil {
 			types := models.GetMapValue("type", data)
 			if types == "" {
-				c.Data["json"] = models.MessageErrorUint64(0, "添加配置失败,type不能为空")
+				c.Data["json"] = models.MessageErrorUint64(0, "添加失败,type不能为空")
 			} else {
 
 				c.Data["json"] = models.AddConfigurationsFast(data, types.(string))

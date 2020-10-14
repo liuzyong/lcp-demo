@@ -114,9 +114,9 @@ func UpdateCategoriesByIdFast(category map[string]interface{},id uint64) (map[st
 	deleteMap["parent_id"]=parent_id
 	deleteMap["type"]=types
 	UpdateAttributesToDb(category,id,deleteMap)
-	//如果配置存在则更新
 
-	return MessageSucessUint64(id, "修改配置成功")
+
+	return MessageSucessUint64(id, "修改成功")
 }
 
 func GetCategoriesFastById(id uint64) (data map[string]interface{}) {
