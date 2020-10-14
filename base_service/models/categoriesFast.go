@@ -90,7 +90,7 @@ func UpdateCategoriesByIdFast(category map[string]interface{},id uint64) (map[st
 	if err != nil  || num <= 0{        //处理err
 		return  MessageErrorUint64(id,"数据不存在")
 	}
-	beego.Debug("UpdateProductByIdFast")
+	beego.Debug("UpdateCategoriesByIdFast")
 
 	types := GetMapValue("type", category)
 	parent_id := GetMapValue("parent_id", category)
@@ -173,8 +173,8 @@ func GetAllCategoriesFast(types string,query map[string]string, names map[string
 	//如果是通过names来进行过滤查询 该方式性能较差,可能是下面查询方式的 二十分之一性能
 	if len(names) != 0{
 		//参数遍历
-		DataList=FindSourceIdByNameFromAttributes("categories",query,names, fields, sortby, order, page, page_size,category_ids,"product")
-		count=CountSourceIdByNameFromAttributes("categories",query,names,category_ids,"product")
+		DataList=FindSourceIdByNameFromAttributes("categories",query,names, fields, sortby, order, page, page_size,category_ids,"category")
+		count=CountSourceIdByNameFromAttributes("categories",query,names,category_ids,"category")
 
 	}else{
 		DataList=FindSourceIdByFromTables("categories",query, fields, sortby, order, page, page_size,category_ids)
