@@ -211,7 +211,7 @@ func FindSourceIdByFromTables(table string, query map[string]string, fields []st
 	var sourceIdsql string
 	//使用分类id先过滤一次
 	if category_ids != "" && category_type !="" {
-		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type)
+		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type,false)
 	}
 
 	sql = "select * from  " + table + "  where  1=1 " + queryWhere + " " + sourceIdsql + " order by updated_time desc limit ?,? "
@@ -243,7 +243,7 @@ func CountSourceIdByFromTables(table string, query map[string]string, category_i
 
 	//使用分类id先过滤一次
 	if category_ids != "" && category_type !="" {
-		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type)
+		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type,false)
 	}
 
 	sql := "select count(*) as count from  " + table + "  where  1=1 " + queryWhere + " " + sourceIdsql
@@ -267,14 +267,14 @@ func CountSourceIdByFromTables(table string, query map[string]string, category_i
 }
 
 
-func getSourceIdByCategoryId(category_ids string,category_type string) string {
+func getSourceIdByCategoryId(category_ids string,category_type string,attribute bool) string {
 	orm.Debug = true
 	o := orm.NewOrm()
 	sql := ""
 	var SourceIdList []orm.Params
 	var sourceIdsql string
 	var sourceIdsqlId string
-	sql = "select DISTINCT source_id  from  relations where target_id in(" + category_ids + ") and type="+category_type
+	sql = "select DISTINCT source_id  from  relations where target_id in(" + category_ids + ") and type='"+category_type+"'"
 
 	_, errs := o.Raw(sql).Values(&SourceIdList)
 	if errs == nil {
@@ -285,9 +285,13 @@ func getSourceIdByCategoryId(category_ids string,category_type string) string {
 			sourceIdsqlId += id + ","
 		}
 		sourceIdsqlId = strings.TrimSuffix(sourceIdsqlId, ",")
-		sourceIdsql = " and source_id in(" + sourceIdsqlId + ")"
+		if attribute ==true {
+			sourceIdsql = " and source_id in(" + sourceIdsqlId + ")"
+		}else{
+			sourceIdsql = " and id in(" + sourceIdsqlId + ")"
+		}
 	}else{
-		sourceIdsql = " and source_id in()"
+		sourceIdsql = " "
 	}
 
 	return sourceIdsql
@@ -319,7 +323,7 @@ func FindSourceIdByNameFromAttributes(table string, query map[string]string, nam
 
 	//使用分类id先过滤一次
 	if category_ids != "" && category_type !="" {
-		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type)
+		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type,true)
 	}
 
 	for k, v := range names {
@@ -398,7 +402,7 @@ func CountSourceIdByNameFromAttributes(table string, query map[string]string, na
 
 	//使用分类id先过滤一次
 	if category_ids != "" && category_type !="" {
-		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type)
+		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type,true)
 	}
 	for k, v := range names {
 		if types != "" {
