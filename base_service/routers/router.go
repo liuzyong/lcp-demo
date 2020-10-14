@@ -8,8 +8,7 @@
 package routers
 
 import (
-	"service_config/controllers"
-
+	"base_service/controllers"
 	"github.com/astaxie/beego"
 )
 

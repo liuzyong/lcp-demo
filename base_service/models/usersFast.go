@@ -215,13 +215,13 @@ func GetAllUsersFast(types string, query map[string]string, names map[string]str
 	if len(names) != 0 {
 		//参数遍历
 		//name:=where(names)
-		DataList = FindSourceIdByNameFromAttributes("users", query, names, fields, sortby, order, page, page_size, category_ids, "user")
-		count = CountSourceIdByNameFromAttributes("users", query, names, category_ids, "user")
+		DataList = FindSourceIdByNameFromAttributes("users", query, names, fields, sortby, order, page, page_size, category_ids, "user","user_category")
+		count = CountSourceIdByNameFromAttributes("users", query, names, category_ids, "user","user_category")
 
 	} else {
 		//sqlCount="select count(*) as count from  products  where  1=1"
-		DataList = FindSourceIdByFromTables("users", query, fields, sortby, order, page, page_size, category_ids)
-		count = CountSourceIdByFromTables("users", query, category_ids)
+		DataList = FindSourceIdByFromTables("users", query, fields, sortby, order, page, page_size, category_ids,"user_category")
+		count = CountSourceIdByFromTables("users", query, category_ids,"user_category")
 	}
 
 	if count <= 0 {

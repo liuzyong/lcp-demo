@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/astaxie/beego/plugins/cors"
-	_ "service_config/routers"
+	_ "base_service/routers"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"

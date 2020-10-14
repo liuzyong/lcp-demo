@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -33,19 +34,23 @@ func AddProductsFast(product map[string]interface{},types string) (data map[stri
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorMap(data,"添加产品失败")
+		return  MessageErrorMap(data,"添加失败")
 	}
 
-	//
-	////填写产品属性
-	//
+	categories:=GetMapValue("category_ids",product)
+	categories_ids :=strings.Split(categories.(string), ",")
+	beego.Debug(categories_ids)
+	//添加分类属性
+	for i := 0; i < len(categories_ids); i++{
+		fmt.Println(i, " ", categories_ids[i])
+	}
 
-	////添加分类属性
-	//for _, v := range c.CategoryIds {
-	//	beego.Debug("v")
-	//	AddRelations(id,v,"category_product")
-	//}
-	//
+	for _, v := range categories_ids {
+		beego.Debug("v")
+		beego.Debug(v)
+		AddRelations(id,StringToUint64(v),"product_category")
+	}
+
 	beego.Debug(product)
 
 
@@ -55,7 +60,7 @@ func AddProductsFast(product map[string]interface{},types string) (data map[stri
 		attribute.SourceId=id
 		attribute.Name=key
 		attribute.Value=value.(string)
-		attribute.Format=getDataType(value)
+		attribute.Format=GetDataType(value)
 		if attribute.Name=="type"{
 			continue
 		}
@@ -119,13 +124,13 @@ func GetAllProductsFast(types string,query map[string]string, names map[string]s
 	if len(names) != 0{
 		//参数遍历
 		//name:=where(names)
-		DataList=FindSourceIdByNameFromAttributes("products",query,names, fields, sortby, order, page, page_size,category_ids,"product")
-		count=CountSourceIdByNameFromAttributes("products",query,names,category_ids,"product")
+		DataList=FindSourceIdByNameFromAttributes("products",query,names, fields, sortby, order, page, page_size,category_ids,"product","product_category")
+		count=CountSourceIdByNameFromAttributes("products",query,names,category_ids,"product","product_category")
 
 	}else{
 		//sqlCount="select count(*) as count from  products  where  1=1"
-		DataList=FindSourceIdByFromTables("products",query, fields, sortby, order, page, page_size,category_ids)
-		count=CountSourceIdByFromTables("products",query,category_ids)
+		DataList=FindSourceIdByFromTables("products",query, fields, sortby, order, page, page_size,category_ids,"product_category")
+		count=CountSourceIdByFromTables("products",query,category_ids,"product_category")
 	}
 
 

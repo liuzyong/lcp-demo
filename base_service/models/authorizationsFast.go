@@ -83,13 +83,14 @@ func GetAllAuthorizationsFast(types string, query map[string]string, names map[s
 	if len(names) != 0 {
 		//参数遍历
 		//name:=where(names)
-		DataList = FindSourceIdByNameFromAttributes("authorizations", query, names, fields, sortby, order, page, page_size, category_ids, "authorization")
-		count = CountSourceIdByNameFromAttributes("authorizations", query, names, category_ids, "authorization")
+		DataList = FindSourceIdByNameFromAttributes("authorizations", query, names, fields, sortby, order, page, page_size, category_ids,
+			"authorization","authorization_category")
+		count = CountSourceIdByNameFromAttributes("authorizations", query, names, category_ids, "authorization","authorization_category")
 
 	} else {
 		//sqlCount="select count(*) as count from  products  where  1=1"
-		DataList = FindSourceIdByFromTables("authorizations", query, fields, sortby, order, page, page_size, category_ids)
-		count = CountSourceIdByFromTables("authorizations", query, category_ids)
+		DataList = FindSourceIdByFromTables("authorizations", query, fields, sortby, order, page, page_size, category_ids,"authorization_category")
+		count = CountSourceIdByFromTables("authorizations", query, category_ids,"authorization_category")
 	}
 
 	if count <= 0 {

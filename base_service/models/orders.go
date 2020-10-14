@@ -61,13 +61,13 @@ func GetAllOrders(query map[string]string, names map[string]string,fields []stri
 	if len(names) != 0{
 		//参数遍历
 		//name:=where(names)
-		DataList=FindSourceIdByNameFromAttributes("orders",query,names, fields, sortby, order, page, page_size,"","order")
-		count=CountSourceIdByNameFromAttributes("orders",query,names,"","order")
+		DataList=FindSourceIdByNameFromAttributes("orders",query,names, fields, sortby, order, page, page_size,"","order","configuration_category")
+		count=CountSourceIdByNameFromAttributes("orders",query,names,"","order","configuration_category")
 
 	}else{
 		//sqlCount="select count(*) as count from  products  where  1=1"
-		DataList=FindSourceIdByFromTables("orders",query, fields, sortby, order, page, page_size,"")
-		count=CountSourceIdByFromTables("orders",query,"")
+		DataList=FindSourceIdByFromTables("orders",query, fields, sortby, order, page, page_size,"","configuration_category")
+		count=CountSourceIdByFromTables("orders",query,"","configuration_category")
 	}
 
 

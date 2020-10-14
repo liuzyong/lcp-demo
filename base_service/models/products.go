@@ -52,13 +52,13 @@ func GetAllProducts(types string,query map[string]string, names map[string]strin
 	if len(names) != 0{
 		//参数遍历
 		//name:=where(names)
-		DataList=FindSourceIdByNameFromAttributes("products",query,names, fields, sortby, order, page, page_size,category_ids,"product")
-		count=CountSourceIdByNameFromAttributes("products",query,names,category_ids,"product")
+		DataList=FindSourceIdByNameFromAttributes("products",query,names, fields, sortby, order, page, page_size,category_ids,"product","product_category")
+		count=CountSourceIdByNameFromAttributes("products",query,names,category_ids,"product","product_category")
 
 	}else{
 		//sqlCount="select count(*) as count from  products  where  1=1"
-		DataList=FindSourceIdByFromTables("products",query, fields, sortby, order, page, page_size,category_ids)
-		count=CountSourceIdByFromTables("products",query,category_ids)
+		DataList=FindSourceIdByFromTables("products",query, fields, sortby, order, page, page_size,category_ids,"product_category")
+		count=CountSourceIdByFromTables("products",query,category_ids,"product_category")
 	}
 
 

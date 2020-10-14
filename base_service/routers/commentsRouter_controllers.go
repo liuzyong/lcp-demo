@@ -7,7 +7,7 @@ import (
 
 func init() {
 
-    beego.GlobalControllerRouter["service_config/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["service_config/controllers:CategoriesController"],
+    beego.GlobalControllerRouter["base_service/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["base_service/controllers:CategoriesController"],
         beego.ControllerComments{
             Method: "Post",
             Router: "/",
@@ -16,7 +16,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["service_config/controllers:CategoriesController"],
+    beego.GlobalControllerRouter["base_service/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["base_service/controllers:CategoriesController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: "/",
@@ -25,7 +25,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["service_config/controllers:CategoriesController"],
+    beego.GlobalControllerRouter["base_service/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["base_service/controllers:CategoriesController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: "/:id",
@@ -34,7 +34,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["service_config/controllers:CategoriesController"],
+    beego.GlobalControllerRouter["base_service/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["base_service/controllers:CategoriesController"],
         beego.ControllerComments{
             Method: "Put",
             Router: "/:id",
@@ -43,7 +43,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["service_config/controllers:CategoriesController"],
+    beego.GlobalControllerRouter["base_service/controllers:CategoriesController"] = append(beego.GlobalControllerRouter["base_service/controllers:CategoriesController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: "/:id",
@@ -52,7 +52,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"],
         beego.ControllerComments{
             Method: "Post",
             Router: "/",
@@ -61,7 +61,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: "/",
@@ -70,7 +70,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: "/:id",
@@ -79,7 +79,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"],
         beego.ControllerComments{
             Method: "Put",
             Router: "/:id",
@@ -88,7 +88,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ConfigurationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ConfigurationsController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: "/:id",
@@ -97,7 +97,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:OrdersController"] = append(beego.GlobalControllerRouter["service_config/controllers:OrdersController"],
+    beego.GlobalControllerRouter["base_service/controllers:OrdersController"] = append(beego.GlobalControllerRouter["base_service/controllers:OrdersController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: "/",
@@ -106,7 +106,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:OrdersController"] = append(beego.GlobalControllerRouter["service_config/controllers:OrdersController"],
+    beego.GlobalControllerRouter["base_service/controllers:OrdersController"] = append(beego.GlobalControllerRouter["base_service/controllers:OrdersController"],
         beego.ControllerComments{
             Method: "Post",
             Router: "/",
@@ -115,7 +115,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:OrdersController"] = append(beego.GlobalControllerRouter["service_config/controllers:OrdersController"],
+    beego.GlobalControllerRouter["base_service/controllers:OrdersController"] = append(beego.GlobalControllerRouter["base_service/controllers:OrdersController"],
         beego.ControllerComments{
             Method: "Put",
             Router: "/:id",
@@ -124,7 +124,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ProductsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ProductsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ProductsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ProductsController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: "/",
@@ -133,7 +133,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ProductsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ProductsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ProductsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ProductsController"],
         beego.ControllerComments{
             Method: "Post",
             Router: "/",
@@ -142,7 +142,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ProductsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ProductsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ProductsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ProductsController"],
         beego.ControllerComments{
             Method: "Put",
             Router: "/:id",
@@ -151,7 +151,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:SpecificationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:SpecificationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:SpecificationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:SpecificationsController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: "/",
@@ -160,7 +160,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:SpecificationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:SpecificationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:SpecificationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:SpecificationsController"],
         beego.ControllerComments{
             Method: "Post",
             Router: "/",
@@ -169,7 +169,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:SpecificationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:SpecificationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:SpecificationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:SpecificationsController"],
         beego.ControllerComments{
             Method: "Put",
             Router: "/:id",
@@ -178,7 +178,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:UsersController"] = append(beego.GlobalControllerRouter["service_config/controllers:UsersController"],
+    beego.GlobalControllerRouter["base_service/controllers:UsersController"] = append(beego.GlobalControllerRouter["base_service/controllers:UsersController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: "/",
@@ -187,7 +187,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:UsersController"] = append(beego.GlobalControllerRouter["service_config/controllers:UsersController"],
+    beego.GlobalControllerRouter["base_service/controllers:UsersController"] = append(beego.GlobalControllerRouter["base_service/controllers:UsersController"],
         beego.ControllerComments{
             Method: "Post",
             Router: "/",
@@ -196,7 +196,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:UsersController"] = append(beego.GlobalControllerRouter["service_config/controllers:UsersController"],
+    beego.GlobalControllerRouter["base_service/controllers:UsersController"] = append(beego.GlobalControllerRouter["base_service/controllers:UsersController"],
         beego.ControllerComments{
             Method: "Put",
             Router: "/:id",
@@ -205,7 +205,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:UsersController"] = append(beego.GlobalControllerRouter["service_config/controllers:UsersController"],
+    beego.GlobalControllerRouter["base_service/controllers:UsersController"] = append(beego.GlobalControllerRouter["base_service/controllers:UsersController"],
         beego.ControllerComments{
             Method: "Login",
             Router: "/login",
@@ -214,7 +214,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:UsersController"] = append(beego.GlobalControllerRouter["service_config/controllers:UsersController"],
+    beego.GlobalControllerRouter["base_service/controllers:UsersController"] = append(beego.GlobalControllerRouter["base_service/controllers:UsersController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: "/:id",
@@ -222,7 +222,7 @@ func init() {
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})
-    beego.GlobalControllerRouter["service_config/controllers:UsersController"] = append(beego.GlobalControllerRouter["service_config/controllers:UsersController"],
+    beego.GlobalControllerRouter["base_service/controllers:UsersController"] = append(beego.GlobalControllerRouter["base_service/controllers:UsersController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: "/:id",
@@ -230,7 +230,7 @@ func init() {
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})
-    beego.GlobalControllerRouter["service_config/controllers:FilesController"] = append(beego.GlobalControllerRouter["service_config/controllers:FilesController"],
+    beego.GlobalControllerRouter["base_service/controllers:FilesController"] = append(beego.GlobalControllerRouter["base_service/controllers:FilesController"],
         beego.ControllerComments{
             Method: "Post",
             Router: "/",
@@ -238,7 +238,7 @@ func init() {
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})
-    beego.GlobalControllerRouter["service_config/controllers:ProductsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ProductsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ProductsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ProductsController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: "/:id",
@@ -247,7 +247,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ProductsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ProductsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ProductsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ProductsController"],
         beego.ControllerComments{
             Method: "Post",
             Router: "/",
@@ -256,7 +256,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:ProductsController"] = append(beego.GlobalControllerRouter["service_config/controllers:ProductsController"],
+    beego.GlobalControllerRouter["base_service/controllers:ProductsController"] = append(beego.GlobalControllerRouter["base_service/controllers:ProductsController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: "/:id",
@@ -265,7 +265,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:AuthorizationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"],
         beego.ControllerComments{
             Method: "Post",
             Router: "/",
@@ -274,7 +274,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["service_config/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:AuthorizationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: "/",
@@ -282,7 +282,7 @@ func init() {
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})
-    beego.GlobalControllerRouter["service_config/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:AuthorizationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"],
         beego.ControllerComments{
             Method: "Put",
             Router: "/:id",
@@ -290,7 +290,7 @@ func init() {
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})
-    beego.GlobalControllerRouter["service_config/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["service_config/controllers:AuthorizationsController"],
+    beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: "/:id",
