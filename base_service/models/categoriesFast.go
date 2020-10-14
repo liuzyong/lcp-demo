@@ -173,12 +173,13 @@ func GetAllCategoriesFast(types string,query map[string]string, names map[string
 	//如果是通过names来进行过滤查询 该方式性能较差,可能是下面查询方式的 二十分之一性能
 	if len(names) != 0{
 		//参数遍历
-		DataList=FindSourceIdByNameFromAttributes("categories",query,names, fields, sortby, order, page, page_size,category_ids,"category")
-		count=CountSourceIdByNameFromAttributes("categories",query,names,category_ids,"category")
+
+		DataList=FindSourceIdByNameFromAttributes("categories",query,names, fields, sortby, order, page, page_size,category_ids,"category","")
+		count=CountSourceIdByNameFromAttributes("categories",query,names,category_ids,"category","")
 
 	}else{
-		DataList=FindSourceIdByFromTables("categories",query, fields, sortby, order, page, page_size,category_ids)
-		count=CountSourceIdByFromTables("categories",query,category_ids)
+		DataList=FindSourceIdByFromTables("categories",query, fields, sortby, order, page, page_size,category_ids,"")
+		count=CountSourceIdByFromTables("categories",query,category_ids,"")
 	}
 
 

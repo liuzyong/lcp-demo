@@ -83,6 +83,24 @@ func uint64ToString(intNum uint64)(int64Str string){
 
 	return int64Str
 }
+
+func StringToUint64(str string)(int64Num uint64){
+	intNum, _ := strconv.Atoi(str)
+	int64Num = uint64(intNum)
+	return int64Num
+}
+
+func GetDataType(i interface{}) string {  //函数t有一个参数i
+	switch i.(type) { //多选语句switch
+	case string:
+		return "string"
+	case int:
+		return "int"
+	}
+	return "string"
+}
+
+
 func getDataType(i interface{}) string {  //函数t有一个参数i
 	switch i.(type) { //多选语句switch
 	case string:

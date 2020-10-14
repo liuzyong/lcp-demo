@@ -79,13 +79,14 @@ func GetAllConfigurationsFast(types string, query map[string]string, names map[s
 	if len(names) != 0 {
 		//参数遍历
 		//name:=where(names)
-		DataList = FindSourceIdByNameFromAttributes("configurations", query, names, fields, sortby, order, page, page_size, category_ids, "configuration")
-		count = CountSourceIdByNameFromAttributes("configurations", query, names, category_ids, "configuration")
+		DataList = FindSourceIdByNameFromAttributes("configurations", query, names, fields, sortby, order, page, page_size, category_ids,
+			"configuration","configuration_category")
+		count = CountSourceIdByNameFromAttributes("configurations", query, names, category_ids, "configuration","configuration_category")
 
 	} else {
 		//sqlCount="select count(*) as count from  products  where  1=1"
-		DataList = FindSourceIdByFromTables("configurations", query, fields, sortby, order, page, page_size, category_ids)
-		count = CountSourceIdByFromTables("configurations", query, category_ids)
+		DataList = FindSourceIdByFromTables("configurations", query, fields, sortby, order, page, page_size, category_ids,"configuration_category")
+		count = CountSourceIdByFromTables("configurations", query, category_ids,"configuration_category")
 	}
 
 	if count <= 0 {

@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"github.com/astaxie/beego"
-	"service_config/models"
+	"base_service/models"
 	"strconv"
 	"strings"
 	"errors"

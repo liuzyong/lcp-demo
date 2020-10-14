@@ -1,4 +1,4 @@
-module service_config
+module base_service
 
 go 1.14
 

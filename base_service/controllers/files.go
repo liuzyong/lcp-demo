@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego"
 	"os"
 	"path"
-	"service_config/models"
+	"base_service/models"
 	"strings"
 	"time"
 )
