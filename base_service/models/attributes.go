@@ -325,12 +325,13 @@ func FindSourceIdByNameFromAttributes(table string, query map[string]string, nam
 	if category_ids != "" && category_type !="" {
 		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type,true)
 	}
-
+	beego.Debug(types)
+	if types != " " {
+		types = " and `type`='" + types + "'"
+	}
 	for k, v := range names {
 
-		if types != "" {
-			types = " and `type`='" + types + "'"
-		}
+	
 		//第一次
 		if i == 0 || 0 >= len(SourceIdList) {
 
@@ -404,11 +405,14 @@ func CountSourceIdByNameFromAttributes(table string, query map[string]string, na
 	if category_ids != "" && category_type !="" {
 		sourceIdsql =getSourceIdByCategoryId(category_ids,category_type,true)
 	}
-	for k, v := range names {
-		if types != "" {
-			types = " and type='" + types + "'"
-		}
 
+
+	if types != "" {
+		types = " and type='" + types + "'"
+	}
+
+	for k, v := range names {
+		
 		//第一次
 		if i == 0 {
 
