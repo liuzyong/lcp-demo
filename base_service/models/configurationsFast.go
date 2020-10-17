@@ -81,11 +81,11 @@ func GetAllConfigurationsFast(types string, query map[string]string, names map[s
 	}
 
 	if count <= 0 {
-		return MessageErrorMap(data, "获取数据失败,没有查到合法数据")
+		return MessageErrorMap(data, "获取数据失败,没有查到有效数据")
 	}
 
 	if 0 == len(DataList) {
-		return MessageErrorMap(data, "获取数据失败,没有查到合法数据")
+		return MessageErrorMap(data, "获取数据失败,没有查到有效数据")
 	}
 
 	dataList := []map[string]string{}

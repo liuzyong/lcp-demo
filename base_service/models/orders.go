@@ -193,7 +193,7 @@ func UpdateOrdersById(c *OrdersData) (map[string]interface{}) {
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  orders where id=?",c.Id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorUint64(c.Id,"订单不存在")
+		return  MessageErrorUint64(c.Id,"数据不存在")
 	}
 
 	DeletePrice(c.Id)
@@ -244,7 +244,7 @@ func DeleteOrders(id uint64) (map[string]interface{}) {
 	// ascertain id exists in the database
 	if err := o.Read(&v); 
 		err != nil {
-		return  MessageErrorUint64(id,"订单不存在")
+		return  MessageErrorUint64(id,"数据不存在")
 	}
 	if _, err := o.Delete(&Orders{Id: id});
 		err != nil {

@@ -339,7 +339,7 @@ func UpdateUsersByIdFast(user map[string]interface{},id uint64) (map[string]inte
 	var maps [] orm.Params
 	num,err := o.Raw("select * from  users where id=?",id).Values(&maps)
 	if err != nil  || num <= 0{        //处理err
-		return  MessageErrorUint64(id,"用户不存在")
+		return  MessageErrorUint64(id,"数据不存在")
 	}
 
 	sql:="UPDATE  `users` SET `updated_time`=? " +

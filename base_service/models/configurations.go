@@ -127,7 +127,7 @@ func GetAllConfigurations(types string,query map[string]string, keys map[string]
 	counts, err := strconv.ParseInt(count, 10, 64)
 	if err != nil  || counts <=0 {
 		beego.Debug(err)
-		return MessageErrorMap(data,"获取数据失败,没有查到合法数据")
+		return MessageErrorMap(data,"获取数据失败,没有查到有效数据")
 	}
 
 	//获取配置列表数据
@@ -135,7 +135,7 @@ func GetAllConfigurations(types string,query map[string]string, keys map[string]
 	_, errs := o.Raw(sql,types,page,page_size).Values(&ConfigList)
 	if errs != nil  {
 		beego.Debug(errs)
-		return MessageErrorMap(data,"获取数据失败,没有查到合法数据")
+		return MessageErrorMap(data,"获取数据失败,没有查到有效数据")
 	}
 	for i := 0; i < len(ConfigList); i++ {
 		beego.Debug(ConfigList[i])
@@ -291,7 +291,7 @@ func DeleteConfigurations(id uint64) (map[string]interface{}) {
 	// ascertain id exists in the database
 	if err := o.Read(&v);
 		err != nil {
-		return  MessageErrorUint64(id,"不存在")
+		return  MessageErrorUint64(id,"数据不存在")
 	}
 	if _, err := o.Delete(&Configurations{Id: id});
 		err != nil {
