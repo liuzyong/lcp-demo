@@ -420,7 +420,7 @@ const schema = {
                                 "name": "operation",
                                 "source": {
                                     "method": "get",
-                                    "url":Config.AUTHORIZATION_ADDRESS+"?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${entity}'",
+                                    "url":  Config.AUTHORIZATION_ADDRESS+"?type=app_page&page=1&perPage=200&query=type:app_page&names='app_id':'${entity}'",
                                     "sendOn": "this.entity !=\"\"",
                                     "adaptor": "\r\nconsole.log(payload.data);\r\nconsole.log(payload.data.items);\r\nvar options = [];\r\nfor (var i = 0; i < payload.data.items.length; i++) {\r\n    console.log(payload.data.items[i].id);\r\n    console.log(payload.data.items[i]);\r\n    var datas = { label: payload.data.items[i].name, value: payload.data.items[i].id }\r\n    console.log(datas);\r\n    options[i] = datas\r\n}\r\npayload.data.options = options;\r\n\r\nreturn {\r\n    ...payload, data: payload.data\r\n};\r\n"
                                 },
