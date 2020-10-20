@@ -221,7 +221,7 @@ npm start
 
 ## Uniappadmin技术交流群
 <div>
-  <img src="https://file.9pigfly.com/uniappadmin_weixin.png" width="300" />
+  <img src="https://file.9pigfly.com/wechat1.png" width="300" />
 </div>
 
 
