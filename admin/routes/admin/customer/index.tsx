@@ -231,7 +231,7 @@ const schema = {
                                             {
                                                 "type": "hidden",
                                                 "name": "resource",
-                                                "value": "${resource}"
+                                                "value": "${entity}"
                                             },
                                             {
                                                 "type": "hidden",
