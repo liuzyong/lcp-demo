@@ -2,7 +2,8 @@
 
 
 while true; do
-ps aux | grep /mnt/uniappadmin/base_service/main  | grep -v grep
+server=`ps aux | grep /mnt/uniappadmin/base_service/main  | grep -v grep`
+echo $server
 if [ ! "$server" ]; then
 nohup  /mnt/uniappadmin/base_service/main -c 1 &
 sleep 10
