@@ -273,7 +273,14 @@ func init() {
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})
-
+    beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"],
+        beego.ControllerComments{
+            Method: "Delete",
+            Router: "/:id",
+            AllowHTTPMethods: []string{"Delete"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})        
     beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"] = append(beego.GlobalControllerRouter["base_service/controllers:AuthorizationsController"],
         beego.ControllerComments{
             Method: "GetAll",
