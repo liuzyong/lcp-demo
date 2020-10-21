@@ -31,7 +31,7 @@ type AuthorizationsDataFast struct {
 }
 
 func (t *AuthorizationsFast) TableName() string {
-	return "configurations"
+	return "authorizations"
 }
 
 //func (t *Attributes) TableName() string {
