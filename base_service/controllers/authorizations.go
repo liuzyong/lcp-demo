@@ -242,7 +242,7 @@ func (c *AuthorizationsController) Delete() {
 
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseUint(idStr, 10, 64)
-	data := models.DeleteConfigurations(id)
+	data := models.DeleteAuthorizations(id)
 
 	c.Data["json"] = data
 

@@ -241,3 +241,18 @@ func GetAuthorizationsFastById(id uint64) (data map[string]interface{}) {
 }
 
 
+func DeleteAuthorizations(id uint64) (map[string]interface{}) {
+	o := orm.NewOrm()
+	v := AuthorizationsFast{Id: id}
+	// ascertain id exists in the database
+	if err := o.Read(&v);
+		err != nil {
+		return  MessageErrorUint64(id,"数据不存在")
+	}
+	if _, err := o.Delete(&AuthorizationsFast{Id: id});
+		err != nil {
+		return  MessageErrorUint64(id,"删除失败")
+	}
+	DeleteAttributes(id)
+	return  MessageSucessUint64(id,"删除成功")
+}
