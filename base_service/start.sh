@@ -1,7 +1,15 @@
 #!/bin/sh
 
 
-
+while true; do
+mysql=`ps aux | grep  /usr/sbin/mysqld   | grep -v grep`
+echo $mysql
+if [ ! "$mysql" ]; then
+/etc/init.d/mysql start 
+sleep 10
+fi
+sleep 5
+done
 
 
 while true; do
