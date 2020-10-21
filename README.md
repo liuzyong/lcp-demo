@@ -178,7 +178,9 @@ go build  ./base_service/main.go
 ## 导入数据库 并配置
 ```
 sql 文件路径：/uniappadmin/base_service/conf/uniappadmin.sql
-配置文件路径: /uniappadmin/base_service/conf/app.conf
+配置文件路径: /uniappadmin/base_service/conf/app.conf.bak 修改为/uniappadmin/base_service/conf/app.conf 
+并修改sqlconn = root:password@tcp(127.0.0.1:3306)/database_name  数据库配置
+
 ```
 
 ## 🔨 启动总后台
