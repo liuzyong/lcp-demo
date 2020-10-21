@@ -30,6 +30,19 @@ type AuthorizationsDataFast struct {
 	Attribute []Attribute `json:"attributes"`
 }
 
+func (t *AuthorizationsFast) TableName() string {
+	return "configurations"
+}
+
+//func (t *Attributes) TableName() string {
+//	return "attributes"
+//}
+
+func init() {
+	orm.RegisterModel(new(AuthorizationsFast))
+	//orm.RegisterModel(new(Attributes))
+}
+
 // AddConfigurations insert a new Configurations into database and returns
 // last inserted Id on success.
 func AddAuthorizationsFast(authorization map[string]interface{}, types string) (data map[string]interface{}) {
