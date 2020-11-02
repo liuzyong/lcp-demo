@@ -57,6 +57,8 @@ func (c *UsersController) GetAll() {
 
 	if v := c.GetString("type"); v != "" {
 		types = v
+	}else{
+		types="common"
 	}
 
 	// fields: col1,col2,entity.col3
@@ -150,7 +152,8 @@ func (c *UsersController) Post() {
 			types := models.GetMapValue("type", data)
 			beego.Debug(types)
 			if types == "" {
-				c.Data["json"] = models.MessageErrorUint64(0, "用户注册失败,type不能为空")
+				types="common"
+				data["type"]=types
 			} else {
 
 				c.Data["json"] = models.AddUsersFast(data, types.(string))

@@ -50,7 +50,9 @@ func (c *AuthorizationsController) Post() {
 		if err == nil {
 			types := models.GetMapValue("type", data)
 			if types == "" {
-				c.Data["json"] = models.MessageErrorUint64(0, "添加权限失败,type不能为空")
+				types="common"
+				data["type"]=types
+			//	c.Data["json"] = models.MessageErrorUint64(0, "添加权限失败,type不能为空")
 			} else {
 
 				c.Data["json"] = models.AddAuthorizationsFast(data, types.(string))
@@ -121,6 +123,8 @@ func (c *AuthorizationsController) GetAll() {
 
 	if v := c.GetString("type"); v != "" {
 		types = v
+	}else{
+		types="common"
 	}
 
 	// fields: col1,col2,entity.col3

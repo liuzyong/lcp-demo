@@ -64,9 +64,7 @@ func (c *CategoriesController) Post() {
 			level := models.GetMapValue("level", data)
 			path := models.GetMapValue("path", data)
 			if types == "" {
-				c.Data["json"] = models.MessageErrorUint64(0, "添加失败,type不能为空")
-				c.ServeJSON()
-				return
+				types="common"
 			}
 
 			if parent_id == "" {
@@ -151,9 +149,7 @@ func (c *CategoriesController) GetAll() {
 	if v := c.GetString("type"); v != "" {
 		types = v
 	}else{
-		// c.Data["json"] = models.MessageErrorUint64(0, "查询失败,type不能为空")
-		// c.ServeJSON()
-		// return
+		types="common"
 	}
 
 

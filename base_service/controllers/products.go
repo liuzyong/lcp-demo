@@ -61,9 +61,7 @@ func (c *ProductsController) GetAll() {
 	if v := c.GetString("type"); v != "" {
 		types = v
 	}else{
-		// c.Data["json"] = models.MessageErrorUint64(0, "查询失败,type不能为空")
-		// c.ServeJSON()
-		// return
+		types="common"
 	}
 
 
@@ -156,7 +154,9 @@ func (c *ProductsController) Post() {
 		if err == nil {
 			types := models.GetMapValue("type", data)
 			if types == "" {
-				c.Data["json"] = models.MessageErrorUint64(0, "添加产品失败,type不能为空")
+				types="common"
+				data["type"]=types
+			//	c.Data["json"] = models.MessageErrorUint64(0, "添加权限失败,type不能为空")
 			} else {
 
 				c.Data["json"] = models.AddProductsFast(data, types.(string))
