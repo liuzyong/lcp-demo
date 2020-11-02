@@ -54,10 +54,10 @@ func (c *ConfigurationsController) Post() {
 				types="common"
 				data["type"]=types
 			//	c.Data["json"] = models.MessageErrorUint64(0, "添加权限失败,type不能为空")
-			} else {
+			}
 
 				c.Data["json"] = models.AddConfigurationsFast(data, types.(string))
-			}
+
 		} else {
 			c.Data["json"] = models.MessageErrorUint64(0, err.Error())
 		}

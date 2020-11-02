@@ -154,10 +154,8 @@ func (c *UsersController) Post() {
 			if types == "" {
 				types="common"
 				data["type"]=types
-			} else {
-
-				c.Data["json"] = models.AddUsersFast(data, types.(string))
 			}
+				c.Data["json"] = models.AddUsersFast(data, types.(string))
 		} else {
 			c.Data["json"] = models.MessageErrorUint64(0, err.Error())
 		}

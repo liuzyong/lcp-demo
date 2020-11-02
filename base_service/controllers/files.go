@@ -62,7 +62,6 @@ func (c *FilesController) Post() {
 		//}
 
 		//3.对文件重命名避免重复+时间戳 2006-01-02 15:04:05 go语言诞生时间 可正常格式化时间
-		//随机数也可
 		fileName := time.Now().Format("2006-01-02")
 		errs:=os.Mkdir("static/upload/images/"+fileName,0755)
 		if errs !=nil{

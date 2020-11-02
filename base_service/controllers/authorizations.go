@@ -53,10 +53,8 @@ func (c *AuthorizationsController) Post() {
 				types="common"
 				data["type"]=types
 			//	c.Data["json"] = models.MessageErrorUint64(0, "添加权限失败,type不能为空")
-			} else {
-
-				c.Data["json"] = models.AddAuthorizationsFast(data, types.(string))
 			}
+				c.Data["json"] = models.AddAuthorizationsFast(data, types.(string))
 		} else {
 			c.Data["json"] = models.MessageErrorUint64(0, err.Error())
 		}
