@@ -223,7 +223,7 @@ npm start
 
 ## Uniappadmin技术交流群
 <div>
-  <img src="https://file.9pigfly.com/weixin1026.png" width="300" />
+  <img src="https://file.9pigfly.com/demo23.png" width="300" />
 </div>
 
 
