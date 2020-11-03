@@ -186,6 +186,7 @@ func (c *UsersController) Post() {
 // @router /:id [put]
 func (c *UsersController) Put() {
 	beego.Debug("Put")
+	beego.Debug(c.Method)
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseUint(idStr, 10, 64)
 

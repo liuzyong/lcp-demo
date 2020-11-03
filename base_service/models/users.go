@@ -15,6 +15,12 @@ type Users struct {
 	Password    string    `orm:"column(password)" description:""`
 	Phone    string    `orm:"column(phone)" description:""`
 	Email    string    `orm:"column(email)" description:""`
+	Relation1    string    `orm:"column(relation1)" description:""`
+	Relation2    string    `orm:"column(relation2)" description:""`
+	Relation3    string    `orm:"column(relation3)" description:""`
+	Relation4    string    `orm:"column(relation4)" description:""`
+	Relation5    string    `orm:"column(relation5)" description:""`
+	Relation6    string    `orm:"column(relation6)" description:""`
 	CreatedTime time.Time `orm:"column(created_time);type(timestamp);null"`
 	UpdatedTime time.Time `orm:"column(updated_time);type(timestamp);null"`
 }
@@ -23,6 +29,12 @@ type Users struct {
 type UsersData struct {
 	Id   uint64 `json:"id"`
 	Type string `json:"type"`
+	Relation1 string `json:"relation1"`
+	Relation2 string `json:"relation2"`
+	Relation3 string `json:"relation3"`
+	Relation4 string `json:"relation4"`
+	Relation5 string `json:"relation5"`
+	Relation6 string `json:"relation6"`
 	Attribute []Attribute `json:"attributes"`
 }
 
@@ -94,10 +106,10 @@ func AddUsers(c *UsersData) (data map[string]interface{}) {
 	orm.Debug = true
 	o := orm.NewOrm()
 	beego.Debug(c)
-	sql :="INSERT INTO `users` (`id`, `type`,  `created_time`, `updated_time`)" +
-		" VALUES (?, ?, ?, ?)"
+	sql :="INSERT INTO `users` (`id`, `type`,  `relation1`,  `relation2`,  `relation3`,  `relation4`,  `relation5`,  `relation6`  `created_time`, `updated_time`)" +
+		" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-	res, err := o.Raw(sql,id,c.Type,time.Now(),time.Now()).Exec()
+	res, err := o.Raw(sql,id,c.Type,c.Relation1,c.Relation2,c.Relation3,c.Relation4,c.Relation5,c.Relation6,time.Now(),time.Now()).Exec()
 	if err != nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)

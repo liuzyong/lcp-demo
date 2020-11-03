@@ -11,19 +11,30 @@ import (
 )
 
 type UsersFast struct {
-	Id          uint64    `orm:"column(id);pk" description:"id"`
-	Type        string    `orm:"column(type)" description:""`
+	Id          uint64       `orm:"column(id);pk" description:"id"`
+	Type    string    `orm:"column(type)" description:""`
 	Username    string    `orm:"column(username)" description:""`
 	Password    string    `orm:"column(password)" description:""`
-	Phone       string    `orm:"column(phone)" description:""`
-	Email       string    `orm:"column(email)" description:""`
+	Phone    string    `orm:"column(phone)" description:""`
+	Email    string    `orm:"column(email)" description:""`
+	Relation1    string    `orm:"column(relation1)" description:""`
+	Relation2    string    `orm:"column(relation2)" description:""`
+	Relation3    string    `orm:"column(relation3)" description:""`
+	Relation4    string    `orm:"column(relation4)" description:""`
+	Relation5    string    `orm:"column(relation5)" description:""`
+	Relation6    string    `orm:"column(relation6)" description:""`
 	CreatedTime time.Time `orm:"column(created_time);type(timestamp);null"`
 	UpdatedTime time.Time `orm:"column(updated_time);type(timestamp);null"`
 }
 
 type UsersFastData struct {
-	Id        uint64      `json:"id"`
-	Type      string      `json:"type"`
+	Id   uint64 `json:"id"`
+	Relation1 string `json:"relation1"`
+	Relation2 string `json:"relation2"`
+	Relation3 string `json:"relation3"`
+	Relation4 string `json:"relation4"`
+	Relation5 string `json:"relation5"`
+	Relation6 string `json:"relation6"`
 	Attribute []Attribute `json:"attributes"`
 }
 
@@ -96,6 +107,12 @@ func AddUsersFast(user map[string]interface{}, types string) (data map[string]in
 	userData.UpdatedTime = time.Now()
 	userData.Type = types
 	userData.Id = id
+	userData.Relation1 =  GetMapValue("relation1", user).(string)
+	userData.Relation2 =  GetMapValue("relation2", user).(string)
+	userData.Relation3 =  GetMapValue("relation3", user).(string)
+	userData.Relation4 =  GetMapValue("relation4", user).(string)
+	userData.Relation5 =  GetMapValue("relation5", user).(string)
+	userData.Relation6 =  GetMapValue("relation6", user).(string)
 
 	num, err := o.Insert(userData)
 	if err != nil {
@@ -336,21 +353,113 @@ func UpdateUsersByIdFast(user map[string]interface{},id uint64) (map[string]inte
 
 	orm.Debug = true
 	o := orm.NewOrm()
-	var maps [] orm.Params
-	num,err := o.Raw("select * from  users where id=?",id).Values(&maps)
-	if err != nil  || num <= 0{        //处理err
+
+	userData := Users{Id: id}
+	err := o.Read(&userData)
+	if err != nil  {        //处理err
 		return  MessageErrorUint64(id,"数据不存在")
 	}
 
-	sql:="UPDATE  `users` SET `updated_time`=? " +
-		"WHERE (`id`=?);"
+	username := GetMapValue("username", user)
+	//验证数据是否存在
+	phone := GetMapValue("phone", user)
+	password := GetMapValue("password", user)
+	email := GetMapValue("email", user)
+	types :=  GetMapValue("type", user).(string)
+	Relation1 :=   GetMapValue("relation1", user).(string)
+	Relation2 :=  GetMapValue("relation2", user).(string)
+	Relation3 :=  GetMapValue("relation3", user).(string)
+	Relation4 :=  GetMapValue("relation4", user).(string)
+	Relation5 :=  GetMapValue("relation5", user).(string)
+	Relation6 :=  GetMapValue("relation6", user).(string)
+	//验证手机号 是否存在
+	if phone != "" {
+		sql := "select count(*) as count from  `users`  where phone=? and type=? limit 1"
 
-	res, err := o.Raw(sql,time.Now(),id).Exec()
-	if err != nil {
-		num, _ := res.RowsAffected()
-		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorUint64(id,"修改失败")
+		var countNum []orm.Params
+		_, errs := o.Raw(sql, phone, types).Values(&countNum)
+		if errs != nil {
+			beego.Debug(errs)
+			return MessageErrorUint64(0, "修改失败,未知错误")
+		}
+
+		counts := GetMapValue("count", countNum[0]).(string)
+		count, err := strconv.ParseInt(counts, 10, 64)
+		if err != nil || count > 0 {
+			return MessageErrorUint64(0, "修改失败,手机号已经存在")
+		}
+		userData.Phone = phone.(string)
 	}
+	//验证用户名 是否存在
+	if username != "" {
+		sql := "select count(*) as count from  `users`  where username=? and type=?  limit 1"
+
+		var countNum []orm.Params
+		_, errs := o.Raw(sql, username, types).Values(&countNum)
+		if errs != nil {
+			beego.Debug(errs)
+			return MessageErrorUint64(0, "修改失败,未知错误")
+		}
+
+		counts := GetMapValue("count", countNum[0]).(string)
+		count, err := strconv.ParseInt(counts, 10, 64)
+		if err != nil || count > 0 {
+			return MessageErrorUint64(0, "修改失败,用户名已经存在")
+		}
+		userData.Username = username.(string)
+	}
+
+	if email != "" {
+
+		userData.Email = email.(string)
+	}
+
+	if password != "" {
+
+		userData.Password = password.(string)
+	}
+	if types != "" {
+		userData.Type = types
+	}
+
+	if Relation1 != "" {
+		userData.Relation1 = Relation1
+	}
+	if Relation2 != "" {
+		userData.Relation2 = Relation2
+	}
+	if Relation3 != "" {
+		userData.Relation3 = Relation3
+	}
+	if Relation4 != "" {
+		userData.Relation4 = Relation4
+	}
+	if Relation5 != "" {
+		userData.Relation5 = Relation5
+	}
+	if Relation6 != "" {
+		userData.Relation6 = Relation6
+	}
+
+	userData.UpdatedTime = time.Now()
+	userData.Id = id
+
+	if num, err := o.Update(&userData); err != nil {
+		fmt.Println("mysql row affected id: ",num,err)
+		return MessageErrorUint64(id, "修改失败")
+	}
+
+
+	//
+	//sql:="UPDATE  `users` SET  `type`=?, `username`=?, `password`=?, `phone`=?, `email`=?, `relation1`=?, `relation2`=?, `relation3`=?, `relation4`=?, `relation5`=?, `relation6`=?, `updated_time`=? " +
+	//	"WHERE (`id`=?);"
+	//
+	//res, err := o.Raw(sql,time.Now(),id).Exec()
+	//if err != nil {
+	//	num, _ := res.RowsAffected()
+	//	fmt.Println("mysql row affected nums: ", num)
+	//	return  MessageErrorUint64(id,"修改失败")
+	//}
 	UpdateCategoriesRelation(GetMapValue("category_ids",user),id,"user_category")
 
 	var  attribute Attribute
