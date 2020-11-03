@@ -25,33 +25,27 @@ func AddProductsFast(product map[string]interface{},types string) (data map[stri
 	orm.Debug = true
 	o := orm.NewOrm()
 
-
-	sql :="INSERT INTO `products` (`id`,  `type`, `created_time`, `updated_time`)" +
-		" VALUES (?, ?,?,  ?)"
-
-	res, err := o.Raw(sql,id,types,time.Now(),time.Now()).Exec()
+	ProductsData := new(Products)
+	ProductsData.CreatedTime = time.Now()
+	ProductsData.UpdatedTime = time.Now()
+	ProductsData.Type = types
+	ProductsData.Id = id
+	ProductsData.Relation1 =  GetMapValue("relation1", product).(string)
+	ProductsData.Relation2 =  GetMapValue("relation2", product).(string)
+	ProductsData.Relation3 =  GetMapValue("relation3", product).(string)
+	ProductsData.Relation4 =  GetMapValue("relation4", product).(string)
+	ProductsData.Relation5 =  GetMapValue("relation5", product).(string)
+	ProductsData.Relation6 =  GetMapValue("relation6", product).(string)
+	num, err := o.Insert(ProductsData)
 	if err != nil {
-		num, _ := res.RowsAffected()
-		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorMap(data,"添加失败")
+		fmt.Println("mysql row affected id: ", num, err)
+		return MessageErrorMap(data, "添加失败")
 	}
 
 	AddCategoriesRelation(GetMapValue("category_ids",product),id,"product_category")
-
-	beego.Debug(product)
-	var  attribute Attribute
-	for key, value := range product {
-
-		attribute.SourceId=id
-		attribute.Name=key
-		attribute.Value=value.(string)
-		attribute.Format=GetDataType(value)
-		if attribute.Name=="type"{
-			continue
-		}
-		//UpdateAttributes(&attribute,id)
-		AddAttributes(&attribute,id,"product")
-	}
+	deleteMap := make(map[string]interface{})
+	deleteMap["type"]=types
+	InsertAttributesToDb(product,id,deleteMap,"product")
 
 	return  MessageSucessUint64(id,"添加成功")
 }
@@ -185,15 +179,50 @@ func UpdateProductByIdFast(product map[string]interface{},id uint64) (map[string
 
 	orm.Debug = true
 	o := orm.NewOrm()
-	var maps [] orm.Params
-	num,err := o.Raw("select * from  products where id=?",id).Values(&maps)
-	if err != nil  || num <= 0{        //处理err
+
+	ProductData := Products{Id: id}
+
+	err := o.Read(&ProductData)
+	if err != nil  {
 		return  MessageErrorUint64(id,"数据不存在")
 	}
-	beego.Debug("UpdateProductByIdFast1")
+
+	ProductData.UpdatedTime = time.Now()
+	ProductData.Id = id
+	types :=  GetMapValue("type", product).(string)
+	Relation1 :=   GetMapValue("relation1", product).(string)
+	Relation2 :=  GetMapValue("relation2", product).(string)
+	Relation3 :=  GetMapValue("relation3", product).(string)
+	Relation4 :=  GetMapValue("relation4", product).(string)
+	Relation5 :=  GetMapValue("relation5", product).(string)
+	Relation6 :=  GetMapValue("relation6", product).(string)
+	if Relation1 != "" {
+		ProductData.Relation1 = Relation1
+	}
+	if Relation2 != "" {
+		ProductData.Relation2 = Relation2
+	}
+	if Relation3 != "" {
+		ProductData.Relation3 = Relation3
+	}
+	if Relation4 != "" {
+		ProductData.Relation4 = Relation4
+	}
+	if Relation5 != "" {
+		ProductData.Relation5 = Relation5
+	}
+	if Relation6 != "" {
+		ProductData.Relation6 = Relation6
+	}
+	if types != "" {
+		ProductData.Type = types
+	}
+
+	if num, err := o.Update(&ProductData); err != nil {
+		fmt.Println("mysql row affected id: ",num,err)
+		return MessageErrorUint64(id, "修改失败")
+	}
 	UpdateCategoriesRelation(GetMapValue("category_ids",product),id,"product_category")
-
-
 
 	sql:="UPDATE  `products` SET  `updated_time`=? " +
 		"WHERE (`id`=?);"
@@ -205,26 +234,9 @@ func UpdateProductByIdFast(product map[string]interface{},id uint64) (map[string
 
 
 	beego.Debug(product)
-
-	var  attribute Attribute
-	for key, value := range product {
-
-		attribute.SourceId=id
-		attribute.Name=key
-		attribute.Value=value.(string)
-		attribute.Format=getDataType(value)
-		if attribute.Name=="type"{
-			continue
-		}
-		attributeData,errs := GetAttributesByName(id,key,"product")
-		beego.Debug(attributeData)
-		beego.Debug(errs)
-		if errs == nil {        //修改
-			UpdateAttributes(&attribute,id)
-		}else{//添加
-			AddAttributes(&attribute,id,"product")
-		}
-	}
+	deleteMap := make(map[string]interface{})
+	deleteMap["type"]=types
+	UpdateAttributesToDb(product,id,deleteMap,"product")
 
 	return  MessageSucessUint64(id,"修改成功")
 }

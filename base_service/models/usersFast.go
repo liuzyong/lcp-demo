@@ -163,8 +163,7 @@ func AddUsersFast(user map[string]interface{}, types string) (data map[string]in
 			continue
 		}
 
-		//去掉权限字段
-		//UpdateAttributes(&attribute,id)
+
 		AddAttributes(&attribute, id, "user")
 	}
 
@@ -449,17 +448,6 @@ func UpdateUsersByIdFast(user map[string]interface{},id uint64) (map[string]inte
 		return MessageErrorUint64(id, "修改失败")
 	}
 
-
-	//
-	//sql:="UPDATE  `users` SET  `type`=?, `username`=?, `password`=?, `phone`=?, `email`=?, `relation1`=?, `relation2`=?, `relation3`=?, `relation4`=?, `relation5`=?, `relation6`=?, `updated_time`=? " +
-	//	"WHERE (`id`=?);"
-	//
-	//res, err := o.Raw(sql,time.Now(),id).Exec()
-	//if err != nil {
-	//	num, _ := res.RowsAffected()
-	//	fmt.Println("mysql row affected nums: ", num)
-	//	return  MessageErrorUint64(id,"修改失败")
-	//}
 	UpdateCategoriesRelation(GetMapValue("category_ids",user),id,"user_category")
 
 	var  attribute Attribute
@@ -481,8 +469,5 @@ func UpdateUsersByIdFast(user map[string]interface{},id uint64) (map[string]inte
 			AddAttributes(&attribute,id,"user")
 		}
 	}
-
-
-
 	return  MessageSucessUint64(id,"修改成功")
 }

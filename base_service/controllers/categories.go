@@ -85,7 +85,7 @@ func (c *CategoriesController) Post() {
 				return
 			}
 
-				c.Data["json"] = models.AddCategoriesFast(data)
+				c.Data["json"] = models.AddCategoriesFast(data,types.(string))
 
 		} else {
 			c.Data["json"] = models.MessageErrorUint64(0, err.Error())
@@ -239,33 +239,33 @@ func (c *CategoriesController) Put() {
 		err := json.Unmarshal(c.Ctx.Input.RequestBody, &data)
 		if err == nil {
 
-			types := models.GetMapValue("type", data)
-			parent_id := models.GetMapValue("parent_id", data)
-			level := models.GetMapValue("level", data)
-			path := models.GetMapValue("path", data)
-			if types == "" {
-				c.Data["json"] = models.MessageErrorUint64(0, "添加失败,type不能为空")
-				c.ServeJSON()
-				return
-			}
-
-			if parent_id == "" {
-				c.Data["json"] =  models.MessageErrorUint64(0, "添加失败,parent_id不能为空")
-				c.ServeJSON()
-				return
-			}
-
-			if level == "" {
-				c.Data["json"] =  models.MessageErrorUint64(0, "添加失败,level不能为空")
-				c.ServeJSON()
-				return
-			}
-
-			if path == "" {
-				c.Data["json"] = models.MessageErrorUint64(0, "添加失败,path不能为空")
-				c.ServeJSON()
-				return
-			}
+			//types := models.GetMapValue("type", data)
+			//parent_id := models.GetMapValue("parent_id", data)
+			//level := models.GetMapValue("level", data)
+			//path := models.GetMapValue("path", data)
+			//if types == "" {
+			//	c.Data["json"] = models.MessageErrorUint64(0, "修改失败,type不能为空")
+			//	c.ServeJSON()
+			//	return
+			//}
+			//
+			//if parent_id == "" {
+			//	c.Data["json"] =  models.MessageErrorUint64(0, "添加失败,parent_id不能为空")
+			//	c.ServeJSON()
+			//	return
+			//}
+			//
+			//if level == "" {
+			//	c.Data["json"] =  models.MessageErrorUint64(0, "添加失败,level不能为空")
+			//	c.ServeJSON()
+			//	return
+			//}
+			//
+			//if path == "" {
+			//	c.Data["json"] = models.MessageErrorUint64(0, "添加失败,path不能为空")
+			//	c.ServeJSON()
+			//	return
+			//}
 			c.Data["json"] = models.UpdateCategoriesByIdFast(data, id)
 		} else {
 			c.Data["json"] = models.MessageErrorUint64(0, err.Error())

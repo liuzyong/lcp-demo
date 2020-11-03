@@ -32,7 +32,7 @@ type CategoriesDataFast struct {
 
 
 
-func AddCategoriesFast(category map[string]interface{}) (data map[string]interface{}) {
+func AddCategoriesFast(category map[string]interface{},types string) (data map[string]interface{}) {
 	id :=SnowflakeId()
 	orm.Debug = true
 	o := orm.NewOrm()
@@ -40,7 +40,6 @@ func AddCategoriesFast(category map[string]interface{}) (data map[string]interfa
 	parent_id := GetMapValue("parent_id", category)
 	level := GetMapValue("level", category)
 	path := GetMapValue("path", category)
-	types :=GetMapValue("type", category)
 
 	if parent_id == "" {
 		return MessageErrorUint64(0, "添加失败,parent_id不能为空")
@@ -55,25 +54,38 @@ func AddCategoriesFast(category map[string]interface{}) (data map[string]interfa
 	}
 
 
-	sql :="INSERT INTO `categories` (`id`, `parent_id`, `level`, `path`, `type`, `created_time`, `updated_time`)" +
-		" VALUES (?, ?, ?, ?, ?, ?, ?)"
-
-	res, err := o.Raw(sql,id,parent_id,level,path,types,time.Now(),time.Now()).Exec()
+	CategorieData := new(Categories)
+	CategorieData.CreatedTime = time.Now()
+	CategorieData.UpdatedTime = time.Now()
+	CategorieData.Type = types
+	CategorieData.ParentId = StringToUint64(ToString(parent_id))
+	CategorieData.Level =StringToUint(ToString(level))
+	CategorieData.Path = path.(string)
+	CategorieData.Id = id
+	CategorieData.Relation1 =  GetMapValue("relation1", category).(string)
+	CategorieData.Relation2 =  GetMapValue("relation2", category).(string)
+	CategorieData.Relation3 =  GetMapValue("relation3", category).(string)
+	CategorieData.Relation4 =  GetMapValue("relation4", category).(string)
+	CategorieData.Relation5 =  GetMapValue("relation5", category).(string)
+	CategorieData.Relation6 =  GetMapValue("relation6", category).(string)
+	num, err := o.Insert(CategorieData)
 	if err != nil {
-		num, _ := res.RowsAffected()
-		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorMap(data,"添加失败")
+		fmt.Println("mysql row affected id: ", num, err)
+		return MessageErrorMap(data, "添加失败")
 	}
-
-
-	beego.Debug(category)
 	deleteMap := make(map[string]interface{})
 	deleteMap["parent_id"]=parent_id
 	deleteMap["level"]=level
 	deleteMap["parent_id"]=parent_id
+	deleteMap["relation1"]=""
+	deleteMap["relation2"]=""
+	deleteMap["relation3"]=""
+	deleteMap["relation4"]=""
+	deleteMap["relation5"]=""
+	deleteMap["relation6"]=""
 	deleteMap["path"]=path
 	deleteMap["type"]=types
-	InsertAttributesToDb(category,id,deleteMap)
+	InsertAttributesToDb(category,id,deleteMap,"category")
 
 	return  MessageSucessUint64(id,"添加成功")
 }
@@ -85,26 +97,63 @@ func UpdateCategoriesByIdFast(category map[string]interface{},id uint64) (map[st
 
 	orm.Debug = true
 	o := orm.NewOrm()
-	var maps [] orm.Params
-	num,err := o.Raw("select * from  categories where id=?",id).Values(&maps)
-	if err != nil  || num <= 0{        //处理err
+
+	CategorieData := Categories{Id: id}
+
+	err := o.Read(&CategorieData)
+	if err != nil  {
 		return  MessageErrorUint64(id,"数据不存在")
 	}
-	beego.Debug("UpdateCategoriesByIdFast")
 
-	types := GetMapValue("type", category)
-	parent_id := GetMapValue("parent_id", category)
-	level := GetMapValue("level", category)
-	path := GetMapValue("path", category)
-	date := GetMapValue("date", category)
+	CategorieData.UpdatedTime = time.Now()
+	CategorieData.Id = id
+	types :=  GetMapValue("type", category).(string)
+	parent_id :=  GetMapValue("parent_id", category)
+	level :=  GetMapValue("level", category)
+	path :=  GetMapValue("path", category)
+	Relation1 :=   GetMapValue("relation1", category).(string)
+	Relation2 :=  GetMapValue("relation2", category).(string)
+	Relation3 :=  GetMapValue("relation3", category).(string)
+	Relation4 :=  GetMapValue("relation4", category).(string)
+	Relation5 :=  GetMapValue("relation5", category).(string)
+	Relation6 :=  GetMapValue("relation6", category).(string)
+	if Relation1 != "" {
+		CategorieData.Relation1 = Relation1
+	}
+	if Relation2 != "" {
+		CategorieData.Relation2 = Relation2
+	}
+	if Relation3 != "" {
+		CategorieData.Relation3 = Relation3
+	}
+	if Relation4 != "" {
+		CategorieData.Relation4 = Relation4
+	}
+	if Relation5 != "" {
+		CategorieData.Relation5 = Relation5
+	}
+	if Relation6 != "" {
+		CategorieData.Relation6 = Relation6
+	}
+	if types != "" {
+		CategorieData.Type = types
+	}
+	if parent_id != "" {
+		CategorieData.ParentId = StringToUint64(ToString(GetMapValue("parent_id", category)))
 
-	beego.Debug(date)
-	sql:="UPDATE  `categories` SET `parent_id`=?, `level`=?, `path`=?, `type`=?, `updated_time`=? " +
-		"WHERE (`id`=?);"
-	res, err := o.Raw(sql,parent_id,level,path,types,time.Now(),id).Exec()
-	if err != nil {
-		num, _ := res.RowsAffected()
-		fmt.Println("mysql row affected nums: ", num)
+	}
+	if level != "" {
+		CategorieData.Level =StringToUint(ToString(GetMapValue("level", category)))
+
+	}
+	if path != "" {
+		CategorieData.Path = GetMapValue("path", category).(string)
+
+	}
+
+
+	if num, err := o.Update(&CategorieData); err != nil {
+		fmt.Println("mysql row affected id: ",num,err)
 		return MessageErrorUint64(id, "修改失败")
 	}
 
@@ -113,7 +162,7 @@ func UpdateCategoriesByIdFast(category map[string]interface{},id uint64) (map[st
 	deleteMap["level"]=level
 	deleteMap["parent_id"]=parent_id
 	deleteMap["type"]=types
-	UpdateAttributesToDb(category,id,deleteMap)
+	UpdateAttributesToDb(category,id,deleteMap,"category")
 
 
 	return MessageSucessUint64(id, "修改成功")
@@ -161,7 +210,7 @@ func GetCategoriesFastById(id uint64) (data map[string]interface{}) {
 	returnData["created_time"]=created_time
 	returnData["updated_time"]=updated_time
 
-	return  MessageSucessMap(returnData,"获取单条产品成功")
+	return  MessageSucessMap(returnData,"获取数据成功")
 }
 
 func GetAllCategoriesFast(types string,query map[string]string, names map[string]string,fields []string, sortby []string, order []string,

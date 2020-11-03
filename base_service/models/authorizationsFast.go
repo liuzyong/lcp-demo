@@ -11,8 +11,14 @@ import (
 type AuthorizationsFast struct {
 	Id          uint64 `orm:"column(id);pk" description:"id"`
 	Type        string `orm:"column(type);size(255);null"`
-	CreatedTime string `orm:"column(created_time);type(timestamp);null"`
-	UpdatedTime string `orm:"column(updated_time);type(timestamp);null"`
+	Relation1    string    `orm:"column(relation1)" description:""`
+	Relation2    string    `orm:"column(relation2)" description:""`
+	Relation3    string    `orm:"column(relation3)" description:""`
+	Relation4    string    `orm:"column(relation4)" description:""`
+	Relation5    string    `orm:"column(relation5)" description:""`
+	Relation6    string    `orm:"column(relation6)" description:""`
+	CreatedTime time.Time `orm:"column(created_time);type(timestamp);null"`
+	UpdatedTime time.Time `orm:"column(updated_time);type(timestamp);null"`
 }
 type AuthorizationRequest struct {
 	Type      string      `json:"type"`
@@ -30,18 +36,18 @@ type AuthorizationsDataFast struct {
 	Attribute []Attribute `json:"attributes"`
 }
 
-func (t *AuthorizationsFast) TableName() string {
-	return "authorizations"
-}
+//func (t *AuthorizationsFast) TableName() string {
+//	return "authorizations"
+//}
 
 //func (t *Attributes) TableName() string {
 //	return "attributes"
 //}
 
-func init() {
-	orm.RegisterModel(new(AuthorizationsFast))
-	//orm.RegisterModel(new(Attributes))
-}
+//func init() {
+//	orm.RegisterModel(new(AuthorizationsFast))
+//	//orm.RegisterModel(new(Attributes))
+//}
 
 // AddConfigurations insert a new Configurations into database and returns
 // last inserted Id on success.
@@ -49,41 +55,50 @@ func AddAuthorizationsFast(authorization map[string]interface{}, types string) (
 	id := SnowflakeId()
 	orm.Debug = true
 	o := orm.NewOrm()
+
 	resource := GetMapValue("resource", authorization)
 	entity := GetMapValue("entity", authorization)
 	operation := GetMapValue("operation", authorization)
-	beego.Debug(resource)
-	beego.Debug(entity)
-	beego.Debug(operation)
+
 	if resource == "" || entity=="" ||  operation==""{
 		return MessageErrorMap(data, "添加权限失败,权限参数不完整")
 	}
-	sql := "INSERT INTO `authorizations` (`id`,  `type`,`resource`,`entity`,`operation`, `created_time`, `updated_time`)" +
-		" VALUES (?, ?,?, ?,?,?, ?)"
 
-	res, err := o.Raw(sql, id, types,resource,entity,operation, time.Now(), time.Now()).Exec()
+
+	AuthorizationData := new(Authorizations)
+	AuthorizationData.CreatedTime = time.Now()
+	AuthorizationData.UpdatedTime = time.Now()
+	AuthorizationData.Type = types
+	AuthorizationData.Id = id
+	AuthorizationData.Resource =  resource.(string)
+	AuthorizationData.Entity =   entity.(string)
+	AuthorizationData.Operation =  operation.(string)
+	AuthorizationData.Relation1 =  GetMapValue("relation1", authorization).(string)
+	AuthorizationData.Relation2 =  GetMapValue("relation2", authorization).(string)
+	AuthorizationData.Relation3 =  GetMapValue("relation3", authorization).(string)
+	AuthorizationData.Relation4 =  GetMapValue("relation4", authorization).(string)
+	AuthorizationData.Relation5 =  GetMapValue("relation5", authorization).(string)
+	AuthorizationData.Relation6 =  GetMapValue("relation6", authorization).(string)
+	num, err := o.Insert(AuthorizationData)
 	if err != nil {
-		num, _ := res.RowsAffected()
-		fmt.Println("mysql row affected nums: ", num)
-		return MessageErrorMap(data, "添加权限失败")
+		fmt.Println("mysql row affected id: ", num, err)
+		return MessageErrorMap(data, "添加失败")
 	}
 
 	AddCategoriesRelation(GetMapValue("category_ids",authorization),id,"authorization_category")
 	beego.Debug(authorization)
 
-	var attribute Attribute
-	for key, value := range authorization {
-		attribute.SourceId = id
-		attribute.Name = key
-		attribute.Value = value.(string)
-		attribute.Format = getDataType(value)
-		if attribute.Name == "type" {
-			continue
-		}
-		AddAttributes(&attribute, id, "authorization")
-	}
 
-	return MessageSucessUint64(id, "添加权限成功")
+	deleteMap := make(map[string]interface{})
+	deleteMap["relation1"]=""
+	deleteMap["relation2"]=""
+	deleteMap["relation3"]=""
+	deleteMap["relation4"]=""
+	deleteMap["relation5"]=""
+	deleteMap["relation6"]=""
+	deleteMap["type"]=""
+	InsertAttributesToDb(authorization,id,deleteMap,"authorization")
+	return MessageSucessUint64(id, "添加成功")
 }
 
 func GetAllAuthorizationsFast(types string, query map[string]string, names map[string]string, fields []string, sortby []string, order []string,
@@ -169,9 +184,11 @@ func UpdateAuthorizationsByIdFast(authorization map[string]interface{},id uint64
 
 	orm.Debug = true
 	o := orm.NewOrm()
-	var maps [] orm.Params
-	num,err := o.Raw("select * from  authorizations where id=?",id).Values(&maps)
-	if err != nil  || num <= 0{        //处理err
+	AuthorizationData := Authorizations{Id: id}
+
+	err := o.Read(&AuthorizationData)
+
+	if err != nil {        //处理err
 		//权限不存在 调用新增
 		if(types !=""){
 			return  AddAuthorizationsFast(authorization,types)
@@ -180,39 +197,54 @@ func UpdateAuthorizationsByIdFast(authorization map[string]interface{},id uint64
 		}
 	}
 
-	sql:="UPDATE  `authorizations` SET `updated_time`=? " +
-		"WHERE (`id`=?);"
 
-	res, err := o.Raw(sql,time.Now(),id).Exec()
-	if err != nil {
-		num, _ := res.RowsAffected()
-		fmt.Println("mysql row affected nums: ", num)
-		return  MessageErrorUint64(id,"修改权限失败")
+	AuthorizationData.UpdatedTime = time.Now()
+	AuthorizationData.Id = id
+	Relation1 :=   GetMapValue("relation1", authorization).(string)
+	Relation2 :=  GetMapValue("relation2", authorization).(string)
+	Relation3 :=  GetMapValue("relation3", authorization).(string)
+	Relation4 :=  GetMapValue("relation4", authorization).(string)
+	Relation5 :=  GetMapValue("relation5", authorization).(string)
+	Relation6 :=  GetMapValue("relation6", authorization).(string)
+	if Relation1 != "" {
+		AuthorizationData.Relation1 = Relation1
 	}
+	if Relation2 != "" {
+		AuthorizationData.Relation2 = Relation2
+	}
+	if Relation3 != "" {
+		AuthorizationData.Relation3 = Relation3
+	}
+	if Relation4 != "" {
+		AuthorizationData.Relation4 = Relation4
+	}
+	if Relation5 != "" {
+		AuthorizationData.Relation5 = Relation5
+	}
+	if Relation6 != "" {
+		AuthorizationData.Relation6 = Relation6
+	}
+	if types != "" {
+		AuthorizationData.Type = types
+	}
+
+	if num, err := o.Update(&AuthorizationData); err != nil {
+		fmt.Println("mysql row affected id: ",num,err)
+		return MessageErrorUint64(id, "修改失败")
+	}
+
 
 	UpdateCategoriesRelation(GetMapValue("category_ids",authorization),id,"authorization_category")
 
-
-	var  attribute Attribute
-	for key, value := range authorization {
-
-		attribute.SourceId=id
-		attribute.Name=key
-		attribute.Value=value.(string)
-		attribute.Format=getDataType(value)
-		if attribute.Name=="type"{
-			continue
-		}
-		attributeData,errs := GetAttributesByName(id,key,"authorization")
-		beego.Debug(attributeData)
-		beego.Debug(errs)
-		if errs == nil {        //修改
-			UpdateAttributes(&attribute,id)
-		}else{//添加
-			AddAttributes(&attribute,id,"authorization")
-		}
-	}
-
+	deleteMap := make(map[string]interface{})
+	deleteMap["relation1"]=""
+	deleteMap["relation2"]=""
+	deleteMap["relation3"]=""
+	deleteMap["relation4"]=""
+	deleteMap["relation5"]=""
+	deleteMap["relation6"]=""
+	deleteMap["type"]=""
+	UpdateAttributesToDb(authorization,id,deleteMap,"authorization")
 
 	return  MessageSucessUint64(id,"修改权限成功")
 }

@@ -32,30 +32,30 @@ func AddConfigurationsFast(configuration map[string]interface{}, types string) (
 	orm.Debug = true
 	o := orm.NewOrm()
 
-	sql := "INSERT INTO `configurations` (`id`,  `type`, `created_time`, `updated_time`)" +
-		" VALUES (?, ?,?,  ?)"
-
-	res, err := o.Raw(sql, id, types, time.Now(), time.Now()).Exec()
+	ConfigurationData := new(Configurations)
+	ConfigurationData.CreatedTime = time.Now()
+	ConfigurationData.UpdatedTime = time.Now()
+	ConfigurationData.Type = types
+	ConfigurationData.Id = id
+	ConfigurationData.Relation1 =  GetMapValue("relation1", configuration).(string)
+	ConfigurationData.Relation2 =  GetMapValue("relation2", configuration).(string)
+	ConfigurationData.Relation3 =  GetMapValue("relation3", configuration).(string)
+	ConfigurationData.Relation4 =  GetMapValue("relation4", configuration).(string)
+	ConfigurationData.Relation5 =  GetMapValue("relation5", configuration).(string)
+	ConfigurationData.Relation6 =  GetMapValue("relation6", configuration).(string)
+	num, err := o.Insert(ConfigurationData)
 	if err != nil {
-		num, _ := res.RowsAffected()
-		fmt.Println("mysql row affected nums: ", num)
+		fmt.Println("mysql row affected id: ", num, err)
 		return MessageErrorMap(data, "添加失败")
 	}
 
+
 	AddCategoriesRelation(GetMapValue("category_ids",configuration),id,"configuration_category")
 	beego.Debug(configuration)
+	deleteMap := make(map[string]interface{})
+	deleteMap["type"]=types
+	InsertAttributesToDb(configuration,id,deleteMap,"configuration")
 
-	var attribute Attribute
-	for key, value := range configuration {
-		attribute.SourceId = id
-		attribute.Name = key
-		attribute.Value = value.(string)
-		attribute.Format = getDataType(value)
-		if attribute.Name == "type" {
-			continue
-		}
-		AddAttributes(&attribute, id, "configuration")
-	}
 
 	return MessageSucessUint64(id, "添加成功")
 }
@@ -140,43 +140,54 @@ func UpdateConfigurationsByIdFast(configuration map[string]interface{}, id uint6
 
 	orm.Debug = true
 	o := orm.NewOrm()
-	var maps []orm.Params
-	num, err := o.Raw("select * from  configurations where id=?", id).Values(&maps)
-	if err != nil || num <= 0 { //处理err
-		return MessageErrorUint64(id, "数据不存在")
+	ConfigurationData := Configurations{Id: id}
+
+	err := o.Read(&ConfigurationData)
+	if err != nil  {
+		return  MessageErrorUint64(id,"数据不存在")
 	}
 
-	sql := "UPDATE  `configurations` SET `updated_time`=? " +
-		"WHERE (`id`=?);"
+	ConfigurationData.UpdatedTime = time.Now()
+	ConfigurationData.Id = id
+	types :=  GetMapValue("type", configuration).(string)
+	Relation1 :=   GetMapValue("relation1", configuration).(string)
+	Relation2 :=  GetMapValue("relation2", configuration).(string)
+	Relation3 :=  GetMapValue("relation3", configuration).(string)
+	Relation4 :=  GetMapValue("relation4", configuration).(string)
+	Relation5 :=  GetMapValue("relation5", configuration).(string)
+	Relation6 :=  GetMapValue("relation6", configuration).(string)
+	if Relation1 != "" {
+		ConfigurationData.Relation1 = Relation1
+	}
+	if Relation2 != "" {
+		ConfigurationData.Relation2 = Relation2
+	}
+	if Relation3 != "" {
+		ConfigurationData.Relation3 = Relation3
+	}
+	if Relation4 != "" {
+		ConfigurationData.Relation4 = Relation4
+	}
+	if Relation5 != "" {
+		ConfigurationData.Relation5 = Relation5
+	}
+	if Relation6 != "" {
+		ConfigurationData.Relation6 = Relation6
+	}
+	if types != "" {
+		ConfigurationData.Type = types
+	}
 
-	res, err := o.Raw(sql, time.Now(), id).Exec()
-	if err != nil {
-		num, _ := res.RowsAffected()
-		fmt.Println("mysql row affected nums: ", num)
+	if num, err := o.Update(&ConfigurationData); err != nil {
+		fmt.Println("mysql row affected id: ",num,err)
 		return MessageErrorUint64(id, "修改失败")
 	}
 	UpdateCategoriesRelation(GetMapValue("category_ids",configuration),id,"configuration_category")
 
-	var attribute Attribute
-	for key, value := range configuration {
 
-		attribute.SourceId = id
-		attribute.Name = key
-		attribute.Value = value.(string)
-		attribute.Format = getDataType(value)
-		if attribute.Name == "type" {
-			continue
-		}
-		attributeData, errs := GetAttributesByName(id, key, "configuration")
-		beego.Debug(attributeData)
-		beego.Debug(errs)
-		if errs == nil { //修改
-			UpdateAttributes(&attribute, id)
-		} else { //添加
-			AddAttributes(&attribute, id, "configuration")
-		}
-	}
-
+	deleteMap := make(map[string]interface{})
+	deleteMap["type"]=types
+	UpdateAttributesToDb(configuration,id,deleteMap,"configuration")
 
 	return MessageSucessUint64(id, "修改成功")
 }

@@ -90,6 +90,14 @@ func StringToUint64(str string)(int64Num uint64){
 	return int64Num
 }
 
+func StringToUint(str string)(intNum uint){
+	i, e := strconv.Atoi(str)
+	if e != nil {
+		return 0
+	}
+	return uint(i)
+}
+
 func GetDataType(i interface{}) string {  //函数t有一个参数i
 	switch i.(type) { //多选语句switch
 	case string:

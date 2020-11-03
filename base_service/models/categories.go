@@ -17,8 +17,14 @@ type Categories struct {
 	Level       uint      `orm:"column(level)" description:"层级"`
 	Path        string    `orm:"column(path);size(255);null"`
 	Type        string    `orm:"column(type);size(255);null"`
-	CreatedTime string `orm:"column(created_time);type(timestamp);null"`
-	UpdatedTime string `orm:"column(updated_time);type(timestamp);null"`
+	Relation1    string    `orm:"column(relation1)" description:""`
+	Relation2    string    `orm:"column(relation2)" description:""`
+	Relation3    string    `orm:"column(relation3)" description:""`
+	Relation4    string    `orm:"column(relation4)" description:""`
+	Relation5    string    `orm:"column(relation5)" description:""`
+	Relation6    string    `orm:"column(relation6)" description:""`
+	CreatedTime time.Time `orm:"column(created_time);type(timestamp);null"`
+	UpdatedTime time.Time `orm:"column(updated_time);type(timestamp);null"`
 }
 
 
@@ -28,6 +34,12 @@ type CategoriesData struct {
 	ParentId uint64 `json:"parent_id"`
 	Level    uint	`json:"level"`
 	Path    string	`json:"path"`
+	Relation1    string    `orm:"column(relation1)" description:""`
+	Relation2    string    `orm:"column(relation2)" description:""`
+	Relation3    string    `orm:"column(relation3)" description:""`
+	Relation4    string    `orm:"column(relation4)" description:""`
+	Relation5    string    `orm:"column(relation5)" description:""`
+	Relation6    string    `orm:"column(relation6)" description:""`
 	Attribute []Attribute `json:"attributes"`
 }
 

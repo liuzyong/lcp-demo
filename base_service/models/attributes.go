@@ -47,7 +47,7 @@ type Attribute struct {
 }
 
 
-func InsertAttributesToDb(data map[string]interface{},id uint64,deleteMap map[string]interface{}){
+func InsertAttributesToDb(data map[string]interface{},id uint64,deleteMap map[string]interface{},table_type string){
 	var  attribute Attribute
 	beego.Debug("InsertAttributesToDb-data",data)
 	for key, value := range data {
@@ -61,8 +61,7 @@ func InsertAttributesToDb(data map[string]interface{},id uint64,deleteMap map[st
 			beego.Debug("deleteMap-"+key)
 			continue
 		}
-		//UpdateAttributes(&attribute,id)
-		AddAttributes(&attribute,id,"category")
+		AddAttributes(&attribute,id,table_type)
 	}
 }
 
@@ -92,7 +91,7 @@ func AddAttributes(attribute *Attribute, SourceId uint64, Type string) bool {
 }
 
 
-func UpdateAttributesToDb(data map[string]interface{},id uint64,deleteMap map[string]interface{}){
+func UpdateAttributesToDb(data map[string]interface{},id uint64,deleteMap map[string]interface{},table_type string){
 	var attribute Attribute
 	beego.Debug("UpdateAttributesToDb-data",data)
 
@@ -106,13 +105,13 @@ func UpdateAttributesToDb(data map[string]interface{},id uint64,deleteMap map[st
 		if(HandleDeleteMap(attribute.Name,deleteMap) ==true){
 			continue
 		}
-		attributeData, errs := GetAttributesByName(id, key, "category")
+		attributeData, errs := GetAttributesByName(id, key, table_type)
 		beego.Debug(attributeData)
 		beego.Debug(errs)
 		if errs == nil { //修改
 			UpdateAttributes(&attribute, id)
 		} else { //添加
-			AddAttributes(&attribute, id, "category")
+			AddAttributes(&attribute, id, table_type)
 		}
 	}
 
