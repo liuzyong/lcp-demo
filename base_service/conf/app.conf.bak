@@ -1,8 +1,0 @@
-appname = base_service
-httpport = 5212
-runmode = dev
-autorender = false
-copyrequestbody = true
-EnableDocs = true
-sqlconn = root:password@tcp(127.0.0.1:3306)/database_name
-
