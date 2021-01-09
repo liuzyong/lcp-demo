@@ -3,10 +3,10 @@ import {
     getEnv
 } from "mobx-state-tree";
 
-let BASE_SERVICE_ADDRESS = "http://127.0.0.1:5212/v1/";
-let STATIC_FILE_ADDRESS = "http://127.0.0.1:5212";
-let ADMIN_ADDRESS = "http://127.0.0.1:5207";
-let ADMIN_EDIT_ADDRESS = "http://127.0.0.1:5204";
+let BASE_SERVICE_ADDRESS = "http://localhost:5212/v1/";
+let STATIC_FILE_ADDRESS = "http://localhost:5212";
+let ADMIN_ADDRESS = "http://localhost:5207";
+let ADMIN_EDIT_ADDRESS = "http://localhost:5204";
 
 
 // let BASE_SERVICE_ADDRESS = "";
