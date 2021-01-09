@@ -1,0 +1,32 @@
+version: '2'
+# 开发环境下的docker-compose
+services:
+  lcp-admin:
+    restart: always
+    image: registry.cn-shanghai.aliyuncs.com/my-lcp/lcp-admin
+    container_name: lcp-admin
+    ports:
+      - "5207:5207"
+    
+  
+  lcp-adminEditor:
+    restart: always
+    image: registry.cn-shanghai.aliyuncs.com/my-lcp/lcp-admin_editor
+    container_name: lcp-adminEditor
+    ports:
+      - "5204:5204"
+    
+  
+  lcp-back:
+    restart: always
+    image: registry.cn-shanghai.aliyuncs.com/my-lcp/lcp-back
+    container_name: lcp-back
+    ports:
+      - "5212:5212"
+    
+
+networks:
+  default:
+    external: #使用已建立好的网络
+      name: lcp
+
