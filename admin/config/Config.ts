@@ -3,16 +3,16 @@ import {
     getEnv
 } from "mobx-state-tree";
 
-let BASE_SERVICE_ADDRESS = "http://localhost:5212/v1/";
-let STATIC_FILE_ADDRESS = "http://localhost:5212";
-let ADMIN_ADDRESS = "http://localhost:5207";
-let ADMIN_EDIT_ADDRESS = "http://localhost:5204";
+// let BASE_SERVICE_ADDRESS = "http://localhost:5212/v1/";
+// let STATIC_FILE_ADDRESS = "http://localhost:5212";
+// let ADMIN_ADDRESS = "http://localhost:5207";
+// let ADMIN_EDIT_ADDRESS = "http://localhost:5204";
 
 
-// let BASE_SERVICE_ADDRESS = "";
-// let ADMIN_ADDRESS = "";
-// let ADMIN_EDIT_ADDRESS = "";
-// let STATIC_FILE_ADDRESS = "";
+let BASE_SERVICE_ADDRESS = "";
+let ADMIN_ADDRESS = "";
+let ADMIN_EDIT_ADDRESS = "";
+let STATIC_FILE_ADDRESS = "";
 
 
 var domian=getDomian();
