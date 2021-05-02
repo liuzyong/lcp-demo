@@ -51,6 +51,7 @@ fis.get("project.ignore").push("public/**", "gh-pages/**");
 
 // 配置只编译哪些文件。
 
+
 fis.set("project.files", ["*.html", "mock/**"]);
 
 fis.match("/mock/**.{json,js,conf}", {
