@@ -11,3 +11,5 @@ yarn-error.log
 yarn.lock
 .workflow
 .DS_Store
+
+flowable-springboot/target/classes/com/cvicse/FlowableSpringbootApplication.class
