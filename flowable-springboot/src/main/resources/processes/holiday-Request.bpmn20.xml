@@ -5,8 +5,8 @@
         <startEvent id="startEvent" name="启动事件"></startEvent>
         <userTask id="approveTask" name="ApproveRequest" flowable:candidateGroups="managers"></userTask>
         <exclusiveGateway id="decision"></exclusiveGateway>
-        <serviceTask id="externalSystemCall" name="SuccessService" flowable:class="com.example.demo.delegate.CallExternalSystemDelegate"></serviceTask>
-        <serviceTask id="sendRejectionMail" name="faileService" flowable:class="com.example.demo.delegate.SendRejectionMail"></serviceTask>
+        <serviceTask id="externalSystemCall" name="SuccessService" flowable:class="com.cvicse.delegate.CallExternalSystemDelegate"></serviceTask>
+        <serviceTask id="sendRejectionMail" name="faileService" flowable:class="com.cvicse.delegate.SendRejectionMail"></serviceTask>
         <userTask id="firstApprovedTask" name="firstApprovedTask" flowable:candidateGroups="first"></userTask>
         <exclusiveGateway id="firstDecision"></exclusiveGateway>
         <userTask id="secenedApprovedTask" name="secenedApprovedTask" flowable:candidateGroups="secened"></userTask>
